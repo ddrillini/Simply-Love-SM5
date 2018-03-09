@@ -93,7 +93,7 @@ t[#t+1] = LoadFont("_wendy small")..{
 		end
 
 		if PREFSMAN:GetPreference("EventMode") then
-			self:settext('EVENT MODE')
+			self:settext('RIP 10')
 
 		elseif GAMESTATE:GetCoinMode() == "CoinMode_Pay" then
 			local credits = GetCredits()
