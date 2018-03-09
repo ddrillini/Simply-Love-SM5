@@ -338,6 +338,7 @@ function InitializeSimplyLove()
 	SL.P1:initialize()
 	SL.P2:initialize()
 	SL.Global:initialize()
+	GAMESTATE:SetPreferredSong( SONGMAN:FindSong("SOWNDS/Applause") )
 end
 
 -- TODO: remove this; it's for debugging purposes (Control+F2 to reload scripts) only
