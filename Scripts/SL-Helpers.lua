@@ -125,16 +125,8 @@ function SetGameModePreferences()
 		PREFSMAN:SetPreference(key, val)
 	end
 
-	-- If we're switching to Casual mode,
-	-- we want to reduce the number of judgments,
-	-- so turn Decents and WayOffs off now.
-	if SL.Global.GameMode == "Casual" then
-		SL.Global.ActiveModifiers.DecentsWayOffs = "Off"
-
-	-- Otherwise, we want Decents and WayOffs enabled by default.
-	else
- 		SL.Global.ActiveModifiers.DecentsWayOffs = "On"
-	end
+	-- For RIP 10, turn decents and way offs off by default.
+	SL.Global.ActiveModifiers.DecentsWayOffs = "Off"
 
 	-- Now that we've set the SL table for DecentsWayOffs appropriately,
 	-- use it to apply DecentsWayOffs as a mod.
