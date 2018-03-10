@@ -236,23 +236,23 @@ SL = {
 		Competitive = {
 			PercentScoreWeightW1=5,
 			PercentScoreWeightW2=4,
-			PercentScoreWeightW3=2,
+			PercentScoreWeightW3=3,
 			PercentScoreWeightW4=0,
-			PercentScoreWeightW5=-6,
-			PercentScoreWeightMiss=-12,
+			PercentScoreWeightW5=0,
+			PercentScoreWeightMiss=0,
 			PercentScoreWeightLetGo=0,
-			PercentScoreWeightHeld=5,
-			PercentScoreWeightHitMine=-6,
+			PercentScoreWeightHeld=2,
+			PercentScoreWeightHitMine=-2,
 
 			GradeWeightW1=5,
 			GradeWeightW2=4,
-			GradeWeightW3=2,
+			GradeWeightW3=3,
 			GradeWeightW4=0,
-			GradeWeightW5=-6,
-			GradeWeightMiss=-12,
+			GradeWeightW5=0,
+			GradeWeightMiss=0,
 			GradeWeightLetGo=0,
-			GradeWeightHeld=5,
-			GradeWeightHitMine=-6,
+			GradeWeightHeld=2,
+			GradeWeightHitMine=-2,
 
 			LifePercentChangeW1=0.008,
 			LifePercentChangeW2=0.008,
@@ -338,7 +338,7 @@ function InitializeSimplyLove()
 	SL.P1:initialize()
 	SL.P2:initialize()
 	SL.Global:initialize()
-	GAMESTATE:SetPreferredSong( SONGMAN:FindSong("SOWNDS/Applause") )
+	GAMESTATE:SetPreferredSong( SONGMAN:FindSong("RIP10/Airtraveler") )
 end
 
 -- TODO: remove this; it's for debugging purposes (Control+F2 to reload scripts) only
