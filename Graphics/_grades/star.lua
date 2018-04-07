@@ -1,7 +1,11 @@
+-- put in this folder:
+-- Simply Love/Graphics/_grades/
+
 local pss = ...
 local t = Def.ActorFrame{}
+local isECFA = (SL.Global.GameMode == "ECFA")
+local FCcolor = "#FFFFFF"
 
--- flag (all fantastics except 1 ex): stars
 t[#t+1] = LoadActor("graphics/star.png")..{
 	OnCommand=function(self)
 		if pss ~= nil and pss:GetTapNoteScores('TapNoteScore_Miss') == 0 and
@@ -11,6 +15,42 @@ t[#t+1] = LoadActor("graphics/star.png")..{
 				pss:GetTapNoteScores('TapNoteScore_W2') == 1 then
 			self:sleep(2)
 			self:queuecommand('Animate')
+		else
+			-- added
+			if pss:GetHoldNoteScores('HoldNoteScore_LetGo') == 0 and
+				pss:GetTapNoteScores('TapNoteScore_Miss') == 0 and
+				pss:GetTapNoteScores('TapNoteScore_W5') == 0 then
+				if pss:GetTapNoteScores('TapNoteScore_W4') > 0 then
+					if isECFA then
+						FCcolor = "#94FEC1" -- ECFA FGC
+					end
+				else
+					-- pss:GetTapNoteScores('TapNoteScore_W4') == 0
+					if pss:GetTapNoteScores('TapNoteScore_W3') > 0 then
+						if isECFA then
+							FCcolor = "#FDDB85" -- ECFA FEC
+						else
+							FCcolor = "#94FEC1" -- FGC
+						end
+					else
+						-- pss:GetTapNoteScores('TapNoteScore_W3') == 0
+						if pss:GetTapNoteScores('TapNoteScore_W2') > 1 then
+							if isECFA then
+								FCcolor = "#6BF0FF" -- ECFA FFC
+							else
+								FCcolor = "#FDDB85" -- FEC
+							end
+						else
+							-- pss:GetTapNoteScores('TapNoteScore_W2') == 0
+							FCcolor = "#6BF0FF" -- general FFC
+						end
+					end
+				end
+			end
+			self:diffuseshift():effectperiod(1.5)
+			self:effectcolor1( color("#FFFFFF") )
+			self:effectcolor2( color(FCcolor) )
+			-- added end
 		end
 	end,
 	AnimateCommand=function(self)
@@ -26,7 +66,9 @@ t[#t+1] = LoadActor("graphics/star.png")..{
 				pss:GetTapNoteScores('TapNoteScore_W5') == 0 and
 				pss:GetTapNoteScores('TapNoteScore_W4') == 0 and
 				pss:GetTapNoteScores('TapNoteScore_W3') == 0 and
-				pss:GetTapNoteScores('TapNoteScore_W2') == 1 then
+				pss:GetTapNoteScores('TapNoteScore_W2') == 1 and
+				pss:GetHoldNoteScores('HoldNoteScore_LetGo') == 0 and
+				pss:GetTapNoteScores('TapNoteScore_HitMine') == 0 then
 			self:sleep(9)
 			self:queuecommand('Appear')
 		end
@@ -91,7 +133,6 @@ t[#t+1] = LoadActor("graphics/goldstar (stretch).png")..{
 	end,
 	OnCommand=function(self)
 		self:draworder(100)
-		-- if worse score than 1 great
 		if pss == nil or pss:GetTapNoteScores('TapNoteScore_Miss') > 0 or
 				pss:GetTapNoteScores('TapNoteScore_W5') > 0 or
 				pss:GetTapNoteScores('TapNoteScore_W4') > 0 or
@@ -99,11 +140,11 @@ t[#t+1] = LoadActor("graphics/goldstar (stretch).png")..{
 			-- Nothing special
 			self:visible(false)
 		elseif pss:GetTapNoteScores('TapNoteScore_W3') == 1 then
-			-- Black flag; one great
+			-- Black flag
 			self:visible(true)
 			self:diffuse(Color.Black)
 		elseif pss:GetTapNoteScores('TapNoteScore_W2') == 1 then
-			-- Lol; one ex
+			-- Lol
 			self:visible(true)
 			self:diffuse(Color.Black)
 			self:sleep(2)
