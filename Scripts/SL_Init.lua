@@ -126,12 +126,13 @@ SL = {
 			color("#5b2b8e"),	-- purple
 			color("#ff0000")	-- red
 		},
+		-- DEMONIC SETTINGS ACCURATE AS OF 2018-05-01
 		StomperZ = {
-			color("#5b2b8e"),	-- purple
-			color("#0073ff"),	-- dark blue
-			color("#66c955"),	-- green
-			color("#e29c18"),	-- gold
-			color("#dddddd"),	-- grey
+			color("#ffffff"),	-- white
+			color("#ffaa11"),	-- yellow-ish
+			color("#44cc33"),	-- green
+			color("#11aaff"),	-- blue
+			color("#aa66ee"),	-- purple-ish
 			color("#ff0000")	-- red
 		}
 	},
@@ -191,12 +192,12 @@ SL = {
 			MinTNSToHideNotes="TapNoteScore_W4",
 			HarshHotLifePenalty=0,
 
-			TimingWindowSecondsW1=0.012500,
-			TimingWindowSecondsW2=0.025000,
-			TimingWindowSecondsW3=0.050000,
-			TimingWindowSecondsW4=0.100000,
-			TimingWindowSecondsW5=0.10000,
-			TimingWindowSecondsHold=0.20000,
+			TimingWindowSecondsW1=0.005,
+			TimingWindowSecondsW2=0.010,
+			TimingWindowSecondsW3=0.020,
+			TimingWindowSecondsW4=0.040,
+			TimingWindowSecondsW5=0.070,
+			TimingWindowSecondsHold=0.320,
 			TimingWindowSecondsMine=0.070000,
 			TimingWindowSecondsRoll=0.350000,
 		},
@@ -298,33 +299,33 @@ SL = {
 		StomperZ = {
 			PercentScoreWeightW1=10,
 			PercentScoreWeightW2=9,
-			PercentScoreWeightW3=8,
-			PercentScoreWeightW4=5,
+			PercentScoreWeightW3=7,
+			PercentScoreWeightW4=4,
 			PercentScoreWeightW5=0,
 			PercentScoreWeightMiss=0,
 			PercentScoreWeightLetGo=0,
 			PercentScoreWeightHeld=10,
-			PercentScoreWeightHitMine=-5,
+			PercentScoreWeightHitMine=0,
 
 			GradeWeightW1=10,
 			GradeWeightW2=9,
-			GradeWeightW3=8,
-			GradeWeightW4=5,
+			GradeWeightW3=7,
+			GradeWeightW4=4,
 			GradeWeightW5=0,
 			GradeWeightMiss=0,
 			GradeWeightLetGo=0,
 			GradeWeightHeld=10,
-			GradeWeightHitMine=-5,
+			GradeWeightHitMine=0,
 
-			LifePercentChangeW1=0.004,
-			LifePercentChangeW2=0.004,
-			LifePercentChangeW3=0.004,
-			LifePercentChangeW4=0.004,
-			LifePercentChangeW5=0,
-			LifePercentChangeMiss=-0.04,
+			LifePercentChangeW1=0.002,
+			LifePercentChangeW2=0.002,
+			LifePercentChangeW3=0.002,
+			LifePercentChangeW4=0.001,
+			LifePercentChangeW5=-0.04,
+			LifePercentChangeMiss=-0.1,
 			LifePercentChangeLetGo=-0.04,
-			LifePercentChangeHeld=0,
-			LifePercentChangeHitMine=-0.04,
+			LifePercentChangeHeld=0.001,
+			LifePercentChangeHitMine=0,
 		},
 	}
 }
