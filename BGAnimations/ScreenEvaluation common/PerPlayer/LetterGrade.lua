@@ -17,10 +17,7 @@ if SL.Global.GameMode ~= "StomperZ" then
 			if pn == PLAYER_1 then
 				self:x( self:GetX() * -1 )
 			end
-		},
-
-	    LoadActor("nice.lua",pn)
-
+		end
 	}
 
 	if ThemePrefs.Get("nice") > 0 then
