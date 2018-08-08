@@ -1,10 +1,14 @@
 local position_on_screen = ...
 
 local Players = GAMESTATE:GetHumanPlayers()
-local song, StageNum, DecentsWayOffs
+local song, StageNum, DecentsWayOffs, LetterGradesAF
 
-local banner_directory = ThemePrefs.Get("VisualTheme")
+local banner_directory = { Hearts="Hearts", Arrows="Arrows" }
+
 local t = Def.ActorFrame{
+	OnCommand=function(self)
+		LetterGradesAF = self:GetParent():GetChild("LetterGradesAF")
+	end,
 	DrawPageCommand=function(self, params)
 		self:sleep(position_on_screen*0.05):linear(0.15):diffusealpha(0)
 
@@ -28,7 +32,7 @@ local t = Def.ActorFrame{
 	},
 
 	--fallback banner
-	LoadActor( THEME:GetPathB("ScreenSelectMusic", "overlay/colored_banners/".. banner_directory .."/banner"..SL.Global.ActiveColorIndex.." (doubleres).png"))..{
+	LoadActor( THEME:GetPathB("ScreenSelectMusic", "overlay/colored_banners/".. (banner_directory[ThemePrefs.Get("VisualTheme")] or "Hearts") .."/banner"..SL.Global.ActiveColorIndex.." (doubleres).png"))..{
 		InitCommand=cmd(y,-6; zoom, 0.333)
 	},
 
@@ -144,6 +148,22 @@ for player in ivalues(Players) do
 			end
 		end
 	}
+
+	-- letter grade
+	if SL.Global.GameMode ~= "StomperZ" then
+		PlayerStatsAF[#PlayerStatsAF+1] = Def.ActorProxy{
+			InitCommand=function(self)
+				self:zoom(WideScale(0.275,0.3)):x( WideScale(194,250) * (player==PLAYER_1 and -1 or 1) ):y(-6)
+			end,
+			DrawStageCommand=function(self)
+				if playerStats and grade then
+					self:SetTarget( LetterGradesAF:GetChild(grade) ):visible(true)
+				else
+					self:visible(false)
+				end
+			end
+		}
+	end
 
 	-- difficulty meter
 	PlayerStatsAF[#PlayerStatsAF+1] = LoadFont("_wendy small")..{

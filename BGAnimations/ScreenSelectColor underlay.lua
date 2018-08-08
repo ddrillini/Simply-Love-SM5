@@ -7,7 +7,7 @@ local ColorSelected = false
 
 local NumHeartsToDraw = IsUsingWideScreen() and 11 or 7
 
-local image = string.sub(ThemePrefs.Get("VisualTheme"),1,-2)
+local image = ThemePrefs.Get("VisualTheme")
 
 -- this handles user input
 local function input(event)
@@ -28,10 +28,6 @@ local function input(event)
 			underlay:GetChild("change_sound"):play()
 
 		elseif event.GameButton == "Start" then
-			if not GAMESTATE:IsPlayerEnabled(event.PlayerNumber) and PREFSMAN:GetPreference("Premium") == "Premium_2PlayersFor1Credit" then
-				GAMESTATE:JoinPlayer(event.PlayerNumber)
-			end
-
 			ColorSelected = true
 			underlay:playcommand("Finish")
 
@@ -55,10 +51,18 @@ local wheel_item_mt = {
 				Name=name,
 				InitCommand=function(subself)
 					self.container = subself
+					if ThemePrefs.Get("VisualTheme")=="Gay" then
+						subself:bob():effectmagnitude(0,0,0):effectclock('bgm'):effectperiod(0.666)
+					end
+				end,
+				OffCommand=function(subself)
+					subself:sleep(0.04 * self.index)
+					subself:linear(0.2)
+					subself:diffusealpha(0)
 				end
 			}
 
-			af[#af+1] = LoadActor(THEME:GetPathG("", image .. ".png"))..{
+			af[#af+1] = LoadActor(THEME:GetPathG("", "_VisualThemeIcons/" .. image .. ".png"))..{
 				InitCommand=function(subself)
 					self.heart = subself
 					subself:diffusealpha(0)
@@ -70,12 +74,15 @@ local wheel_item_mt = {
 					subself:linear(0.2)
 					subself:diffusealpha(1)
 				end,
-				OffCommand=function(subself)
-					subself:sleep(0.04 * self.index)
-					subself:linear(0.2)
-					subself:diffusealpha(0)
-				end
 			}
+
+			if ThemePrefs.Get("VisualTheme") == "Gay" then
+				af[#af+1] = Def.BitmapText{
+					Font="_miso",
+					Text=name~="item7" and "i'm gay" or "i've gay",
+					InitCommand=function(subself) subself:y(-6):diffuse(Color.Black):zoom(1.2) end
+				}
+			end
 
 			return af
 		end,
@@ -112,6 +119,11 @@ local wheel_item_mt = {
 				self.container:zoom( zoom )
 			end
 
+			if ThemePrefs.Get("VisualTheme")=="Gay" and item_index == (IsUsingWideScreen() and 6 or 4) then
+				self.container:effectmagnitude(0,4,0)
+			else
+				self.container:effectmagnitude(0,0,0)
+			end
 		end,
 
 		set = function(self, color)

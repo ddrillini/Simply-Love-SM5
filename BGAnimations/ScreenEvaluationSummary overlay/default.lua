@@ -2,6 +2,30 @@ local numStages = SL.Global.Stages.PlayedThisGame
 
 local page = 1
 local pages = math.ceil(numStages/4)
+local next_page
+
+-- assume that the player has dedicated MenuButtons
+local buttons = {
+	-- previous page
+	MenuLeft = -1,
+	MenuUp = -1,
+	-- next page
+	MenuRight = 1,
+	MenuDown = 1,
+}
+
+-- if OnlyDedicatedMenuButtons is disabled, add in support for navigating this screen with gameplay buttons
+if not PREFSMAN:GetPreference("OnlyDedicatedMenuButtons") then
+	-- previous page
+	buttons.Left=-1
+	buttons.Up=-1
+	buttons.DownLeft=-1
+	-- next page
+	buttons.Right=1
+	buttons.Down=1
+	buttons.DownRight=1
+end
+
 
 local t = Def.ActorFrame{
 	CodeMessageCommand=function(self, param)
@@ -15,21 +39,12 @@ local t = Def.ActorFrame{
 			SaveScreenshot(param.PlayerNumber, false, true, prefix)
 		end
 
-		if pages > 1 then
-			-- previous page
-			if param.Name == "MenuLeft" or param.Name == "MenuUp" then
-				if page > 1 then
-					page = page - 1
-					self:stoptweening():queuecommand("Hide")
-				end
-			end
+		if pages > 1 and buttons[param.Name] ~= nil then
+			next_page = page + buttons[param.Name]
 
-			-- next page
-			if param.Name == "MenuRight" or param.Name == "MenuDown" then
-				if page < pages then
-					page = page + 1
-					self:stoptweening():queuecommand("Hide")
-				end
+			if next_page > 0 and next_page < pages+1 then
+				page = next_page
+				self:stoptweening():queuecommand("Hide")
 			end
 		end
 	end,
@@ -39,13 +54,17 @@ local t = Def.ActorFrame{
 	Def.BitmapText{
 		Name="PageNumber",
 		Font="_wendy small",
-		Text="Page 1/" .. pages,
-		InitCommand=cmd(diffusealpha,0; zoom,0.6; xy, _screen.cx, 14 ),
+		Text=THEME:GetString("ScreenEvaluationSummary", "Page") .. " 1/" .. pages,
+		InitCommand=cmd(diffusealpha,0; zoom, WideScale(0.5,0.6); xy, _screen.cx, 15 ),
 		OnCommand=cmd(sleep, 0.1; decelerate,0.33; diffusealpha, 1),
 		OffCommand=cmd(accelerate,0.33; diffusealpha,0),
-		HideCommand=function(self) self:sleep(0.5):settext( "Page "..page.."/"..pages ) end
+		HideCommand=function(self) self:sleep(0.5):settext( THEME:GetString("ScreenEvaluationSummary", "Page").." "..page.."/"..pages ) end
 	}
 }
+
+if SL.Global.GameMode ~= "StomperZ" then
+	t[#t+1] = LoadActor("./LetterGrades.lua")
+end
 
 -- i will increment so that we progress down the screen from top to bottom
 -- first song of the round at the top, more recently played song at the bottom

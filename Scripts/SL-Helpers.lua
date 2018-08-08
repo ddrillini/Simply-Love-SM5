@@ -58,10 +58,10 @@ end
 function GetNotefieldX( player )
 	local p = ToEnumShortString(player)
 
-	local IsUsingSoloSingles = PREFSMAN:GetPreference('Center1Player')
+	local IsPlayingDanceSolo = (GAMESTATE:GetCurrentStyle():GetStepsType() == "StepsType_Dance_Solo")
+	local IsUsingSoloSingles = PREFSMAN:GetPreference('Center1Player') or IsPlayingDanceSolo
 	local NumPlayersEnabled = GAMESTATE:GetNumPlayersEnabled()
 	local NumSidesJoined = GAMESTATE:GetNumSidesJoined()
-	local IsPlayingDanceSolo = GAMESTATE:GetCurrentStyle():GetStepsType() == "StepsType_Dance_Solo" and true or false
 
 	if IsUsingSoloSingles and NumPlayersEnabled == 1 and NumSidesJoined == 1 then return _screen.cx end
 	if GAMESTATE:GetCurrentStyle():GetStyleType() == "StyleType_OnePlayerTwoSides" then return _screen.cx end
@@ -156,13 +156,22 @@ function SetGameModePreferences()
 end
 
 function GetOperatorMenuLineNames()
-	local lines = "System,KeyConfig,TestInput,Visual,GraphicsSound,Arcade,Input,Theme,MenuTimer,CustomSongs,Advanced,Profiles,Reload"
+	local lines = "System,KeyConfig,TestInput,Visual,GraphicsSound,Arcade,Input,Theme,MenuTimer,CustomSongs,Advanced,Profiles,Acknowledgments,Reload"
 
 	-- CustomSongs preferences don't exist in 5.0.x, which many players may still be using
 	-- thus, if the preference for CustomSongsEnable isn't found in this version of SM, don't let players
 	-- get into the CustomSongs submenu in the OperatorMenu by removing that OptionRow
 	if not PREFSMAN:PreferenceExists("CustomSongsEnable") then
 		lines = lines:gsub("CustomSongs,", "")
+	end
+	return lines
+end
+
+
+function GetSimplyLoveOptionsLineNames()
+	local lines = "CasualMaxMeter,AutoStyle,DefaultGameMode,TimingWindowAdd,CustomFailSet,CreditStacking,MusicWheelStyle,MusicWheelSpeed,SelectProfile,SelectColor,EvalSummary,NameEntry,GameOver,HideStockNoteSksins,DanceSolo,GradesInMusicWheel,Nice,VisualTheme,RainbowMode"
+	if Sprite.LoadFromCached ~= nil then
+		lines = lines .. ",UseImageCache"
 	end
 	return lines
 end
@@ -195,4 +204,10 @@ function GetPlayerOptions2LineNames()
 	end
 
 	return mods
+end
+
+BrighterOptionRows = function()
+	if ThemePrefs.Get("RainbowMode") then return true end
+	if PREFSMAN:GetPreference("EasterEggs") and MonthOfYear()==11 then return true end -- holiday cheer
+	return false
 end

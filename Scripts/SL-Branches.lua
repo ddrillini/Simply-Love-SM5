@@ -1,5 +1,17 @@
 if not Branch then Branch = {} end
 
+SelectMusicOrCourse = function()
+	if GAMESTATE:IsCourseMode() then
+		return "ScreenSelectCourse"
+	else
+		if SL.Global.GameMode == "Casual" then
+			return "ScreenSelectMusicCasual"
+		end
+
+		return "ScreenSelectMusic"
+	end
+end
+
 Branch.AllowScreenNameEntry = function()
 
 	-- If we're in Casual mode, don't allow NameEntry, and don't
@@ -67,11 +79,7 @@ Branch.AfterEvaluationStage = function()
 end
 
 Branch.AfterSelectPlayMode = function()
-	if GAMESTATE:GetPlayMode() == "PlayMode_Nonstop" then
-		return "ScreenSelectCourseNonstop"
-	else
-		return "ScreenSelectMusic"
-	end
+	return SelectMusicOrCourse()
 end
 
 
@@ -142,8 +150,8 @@ Branch.AfterProfileSave = function()
 			local LongCutoff = PREFSMAN:GetPreference("LongVerSongSeconds")
 			local MarathonCutoff = PREFSMAN:GetPreference("MarathonVerSongSeconds")
 
-			local IsMarathon = DurationWithRate/MarathonCutoff > 1 and true or false
-			local IsLong     = DurationWithRate/LongCutoff > 1 and true or false
+			local IsMarathon = (DurationWithRate/MarathonCutoff > 1)
+			local IsLong     = (DurationWithRate/LongCutoff > 1)
 
 			ActualSongCost = (IsMarathon and 3) or (IsLong and 2) or 1
 			StagesToAddBack = SMSongCost - ActualSongCost
@@ -151,11 +159,11 @@ Branch.AfterProfileSave = function()
 			SL.Global.Stages.Remaining = SL.Global.Stages.Remaining + StagesToAddBack
 		end
 
-		-- Now, check if Stepmania and SL disagree on the stage count
+		-- Now, check if StepMania and SL disagree on the stage count
 		-- If necessary, add stages back
 		-- This might be necessary because
 		-- a) a Lua chart reloaded ScreenGameplay, or
-		-- b) everyone failed, and Stepmania zeroed out the stage numbers
+		-- b) everyone failed, and StepmMania zeroed out the stage numbers
 		if GAMESTATE:GetNumStagesLeft(GAMESTATE:GetMasterPlayerNumber()) < SL.Global.Stages.Remaining then
 			local StagesToAddBack = math.abs(SL.Global.Stages.Remaining - GAMESTATE:GetNumStagesLeft(GAMESTATE:GetMasterPlayerNumber()))
 			local Players = GAMESTATE:GetHumanPlayers()

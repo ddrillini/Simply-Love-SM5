@@ -74,6 +74,7 @@ local GlobalDefaults = {
 			self.ScreenshotTexture = nil
 			self.MenuTimer = {
 				ScreenSelectMusic = ThemePrefs.Get("ScreenSelectMusicMenuTimer"),
+				ScreenSelectMusicCasual = ThemePrefs.Get("ScreenSelectMusicCasualMenuTimer"),
 				ScreenPlayerOptions = ThemePrefs.Get("ScreenPlayerOptionsMenuTimer"),
 				ScreenEvaluation = ThemePrefs.Get("ScreenEvaluationMenuTimer"),
 				ScreenEvaluationSummary = ThemePrefs.Get("ScreenEvaluationSummaryMenuTimer"),
@@ -110,6 +111,14 @@ SL = {
 		"#FF7D00"
 	},
 	JudgmentColors = {
+		Casual = {
+			color("#21CCE8"),	-- blue
+			color("#e29c18"),	-- gold
+			color("#66c955"),	-- green
+			color("#5b2b8e"),	-- purple
+			color("#c9855e"),	-- peach?
+			color("#ff0000")	-- red
+		},
 		Competitive = {
 			color("#21CCE8"),	-- blue
 			color("#e29c18"),	-- gold
@@ -170,7 +179,7 @@ SL = {
 			TimingWindowSecondsRoll=0.350000,
 		},
 		ECFA = {
-			TimingWindowAdd=0,
+			TimingWindowAdd=0.0015,
 			RegenComboAfterMiss=5,
 			MaxRegenComboAfterMiss=10,
 			MinTNSToHideNotes="TapNoteScore_W4",
@@ -182,7 +191,7 @@ SL = {
 			TimingWindowSecondsW4=0.102000,
 			TimingWindowSecondsW5=0.135000,
 			TimingWindowSecondsHold=0.320000,
-			TimingWindowSecondsMine=0.070000,
+			TimingWindowSecondsMine=0.065000,
 			TimingWindowSecondsRoll=0.350000,
 		},
 		StomperZ = {
