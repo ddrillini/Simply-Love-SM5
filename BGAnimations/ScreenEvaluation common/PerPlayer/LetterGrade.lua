@@ -8,6 +8,36 @@ if SL.Global.GameMode ~= "StomperZ" then
 	local title = GAMESTATE:GetCurrentSong():GetDisplayFullTitle()
 	if title == "D" then grade = "Grade_Tier99" end
 
+	-- Glowing grades, by Sangyeol Baek
+	local FCcolor = nil
+	local isStarRating = (grade == "Grade_Tier01") or (grade == "Grade_Tier02") or (grade == "Grade_Tier03") or (grade == "Grade_Tier04")
+	local failed = (grade == "Grade_Failed")
+	if (isStarRating == false) and (failed == false) then
+		if SL.Global.GameMode == "ECFA" then
+			if playerStats:FullComboOfScore('TapNoteScore_W1') then
+				FCcolor = color("#6BF0FF") -- blue
+			elseif playerStats:FullComboOfScore('TapNoteScore_W2') then
+				FCcolor = color("#6BF0FF") -- blue
+			elseif playerStats:FullComboOfScore('TapNoteScore_W3') then
+				FCcolor = color("#FDDB85") -- gold
+			elseif playerStats:FullComboOfScore('TapNoteScore_W4') then
+				FCcolor = color("#94FEC1") -- green
+			else
+				FCcolor = nil -- nothing
+			end
+		else
+			if playerStats:FullCombo() then
+				if playerStats:FullComboOfScore('TapNoteScore_W1') then
+					FCcolor = color("#6BF0FF") -- blue
+				elseif playerStats:FullComboOfScore('TapNoteScore_W2') then
+					FCcolor = color("#FDDB85") -- gold
+				else
+					FCcolor = color("#94FEC1") -- green
+				end
+			end
+		end
+	end -- end glowing grades logic
+
 	local t = Def.ActorFrame{}
 
 	t[#t+1] = LoadActor(THEME:GetPathG("", "_grades/"..grade..".lua"), playerStats)..{
