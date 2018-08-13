@@ -16,8 +16,8 @@ t[#t+1] = LoadActor("graphics/star.png")..{
 			self:sleep(2)
 			self:queuecommand('Animate')
 		else
-			-- added
-			if pss:GetHoldNoteScores('HoldNoteScore_LetGo') == 0 and
+			-- Glowing Grades
+			if pss ~= nil and pss:GetHoldNoteScores('HoldNoteScore_LetGo') == 0 and
 				pss:GetTapNoteScores('TapNoteScore_Miss') == 0 and
 				pss:GetTapNoteScores('TapNoteScore_W5') == 0 then
 				if pss:GetTapNoteScores('TapNoteScore_W4') > 0 then
@@ -50,7 +50,7 @@ t[#t+1] = LoadActor("graphics/star.png")..{
 			self:diffuseshift():effectperiod(1.5)
 			self:effectcolor1( color("#FFFFFF") )
 			self:effectcolor2( color(FCcolor) )
-			-- added end
+			-- Glowing Grades end
 		end
 	end,
 	AnimateCommand=function(self)
