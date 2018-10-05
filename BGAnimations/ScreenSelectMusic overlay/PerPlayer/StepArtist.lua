@@ -80,8 +80,15 @@ return Def.ActorFrame{
 			if not SongOrCourse then
 				self:settext("")
 			elseif StepsOrCourse then
+
 				local stepartist = GAMESTATE:IsCourseMode() and StepsOrCourse:GetScripter() or StepsOrCourse:GetAuthorCredit()
-				self:settext(stepartist or "")
+				self:settext(stepartist or ""):diffuse( color("#1e282f") )
+
+				for i=1, stepartist:utf8len() do
+					if stepartist:utf8sub(i,i):byte() >= 240 then
+						self:AddAttribute(i-1, { Length=1, Diffuse={1,1,1,1} } )
+					end
+				end
 			end
 		end
 	}
