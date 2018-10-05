@@ -8,6 +8,8 @@ local songs = {
 
 local audio_file =  songs[ ThemePrefs.Get("VisualTheme") ]
 
+audio_file = 'Hearts (loop).ogg'
+
 -- the best way to spread holiday cheer is singing loud for all to hear
 if PREFSMAN:GetPreference("EasterEggs") and MonthOfYear()==11 then
 	audio_file = "HolidayCheer"
