@@ -42,29 +42,33 @@ local af = Def.ActorFrame{
 	end,
 	OffCommand=cmd(linear,0.5; diffusealpha, 0),
 
-	Def.ActorFrame{
-		InitCommand=function(self) self:zoom(0.8):y(-120):diffusealpha(0) end,
-		OnCommand=function(self) self:sleep(0.2):linear(0.4):diffusealpha(1) end,
+	-- how many songs / courses
+	-- Def.ActorFrame{
+	-- 	InitCommand=function(self) self:zoom(0.8):y(-120):diffusealpha(0) end,
+	-- 	OnCommand=function(self) self:sleep(0.2):linear(0.4):diffusealpha(1) end,
 
-		Def.BitmapText{
-			Font="_miso",
-			Text=sm_version,
-			InitCommand=function(self) self:y(-20):diffuse(TextColor) end,
-		},
-		Def.BitmapText{
-			Font="_miso",
-			Text=SongStats,
-			InitCommand=function(self) self:diffuse(TextColor) end,
-		}
-	},
+	-- 	Def.BitmapText{
+	-- 		Font="_miso",
+	-- 		Text=sm_version,
+	-- 		InitCommand=function(self) self:y(-20):diffuse(TextColor) end,
+	-- 	},
+	-- 	Def.BitmapText{
+	-- 		Font="_miso",
+	-- 		Text=SongStats,
+	-- 		InitCommand=function(self) self:diffuse(TextColor) end,
+	-- 	}
+	-- },
 
-	LoadActor(THEME:GetPathG("", "_logos/" .. game))..{
-		InitCommand=function(self)
-			self:y(-16):zoom( game=="pump" and 0.2 or 0.205 )
-		end
-	},
+	-- the rainbow arrows
+	-- LoadActor(THEME:GetPathG("", "_logos/" .. game))..{
+	-- 	InitCommand=function(self)
+	-- 		self:y(-16):zoom( game=="pump" and 0.2 or 0.205 )
+	-- 	end
+	-- },
 
-	LoadActor("Simply".. image .." (doubleres).png") .. {
+	-- SIMPLY XXXXX where XXXXX = love, arrows, spooky, etc
+	-- LoadActor("Simply".. image .." (doubleres).png") .. {
+	LoadActor("ddrillini.png") .. { -- DDRILLINI hacks
 		InitCommand=function(self) self:x(2):zoom(0.7):shadowlength(0.75) end,
 		OffCommand=function(self) self:linear(0.5):shadowlength(0) end
 	}

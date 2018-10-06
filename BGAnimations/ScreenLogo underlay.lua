@@ -18,7 +18,8 @@ local t = Def.ActorFrame{
 		end
 	},
 
-	LoadActor(THEME:GetPathB("ScreenTitleMenu","underlay/Simply".. image .." (doubleres).png"))..{
+	-- LoadActor(THEME:GetPathB("ScreenTitleMenu","underlay/Simply".. image .." (doubleres).png"))..{
+	LoadActor(THEME:GetPathB("ScreenTitleMenu","underlay/ddrillini.png"))..{ -- DDRILLIN HACKS
 		InitCommand=function(self)
 			self:x(_screen.cx+2):diffusealpha(0):zoom(0.7)
 				:shadowlength(1)
