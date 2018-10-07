@@ -4,6 +4,10 @@ if game ~= "dance" and game ~= "pump" then
 	game = "techno"
 end
 
+local ddrillini_letters = { 'd_1', 'd_2', 'r', 'i_1', 'l_1', 'l_2', 'i_2', 'n', 'i_3' }
+
+-- This file renders SIMPLY XXXX on the attract loop.
+-- `ScreenTitleMenu underlay` renders SIMPLY XXXX when credits have been inserted.
 local t = Def.ActorFrame{
 	InitCommand=function(self)
 		self:y( image == "Hearts" and _screen.cy or _screen.cy+10 )		
@@ -19,16 +23,50 @@ local t = Def.ActorFrame{
 	-- },
 
 	-- LoadActor(THEME:GetPathB("ScreenTitleMenu","underlay/Simply".. image .." (doubleres).png"))..{
-	LoadActor(THEME:GetPathB("ScreenTitleMenu","underlay/ddrillini.png"))..{ -- DDRILLIN HACKS
-		InitCommand=function(self)
-			self:x(_screen.cx+2):diffusealpha(0):zoom(0.7)
-				:shadowlength(1)
-		end,
-		OnCommand=cmd(linear,0.5; diffusealpha, 1)
-	}
+	-- LoadActor(THEME:GetPathB("ScreenTitleMenu","underlay/ddrillini/ddrillini.png"))..{ -- DDRILLINI HACKS
+	-- 	InitCommand=function(self)
+	-- 		self:x(_screen.cx+2):diffusealpha(0):zoom(0.7)
+	-- 			:shadowlength(1)
+	-- 	end,
+	-- 	OnCommand=cmd(linear,0.5; diffusealpha, 1)
+	-- }
 }
 
+-- Draw DDRIllini letters
+for i=1,9 do
+	t[#t+1] = Def.ActorFrame {
+		LoadActor("ScreenTitleMenu underlay/ddrillini/" .. ddrillini_letters[i] .. ".png") .. {
+	-- There appear to be two different syntaxes: `function(self)` and `cmd`.
+			InitCommand=function(self)
+				self
+				-- positioning, sizing, shadow
+				-- added :Center and :y(2) relative to the other instance of 
+				-- this code in ScreenTitleMenu
+				:Center() :y(2) :zoom(0.7) :shadowlength(0.75)
+				-- fading in
+				:diffusealpha(0)
+			end,
 
+			OnCommand=function(self)
+				self
+				-- delay each letter by a bit more each time
+				:sleep(i*0.1 + 0.2)
+				:linear(.75)
+				:diffusealpha(1)
+			end,
+
+			OffCommand=function(self)
+				self
+				-- fading out
+				:linear(0.5)
+				:shadowlength(0)
+			end,
+
+		}
+	}
+end
+
+-- Check if coins have been inserted. Display corresponding elements appropriately.
 local af = Def.ActorFrame{
 	OnCommand=cmd(queuecommand,"Refresh"),
 	CoinModeChangedMessageCommand=cmd(queuecommand,"Refresh"),

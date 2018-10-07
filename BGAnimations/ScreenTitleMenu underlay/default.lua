@@ -33,6 +33,8 @@ if image == "Spooky" then  --SSHHHH dont tell anyone ;)
 	image = (math.random(1,100) > 11 and "Spooky" or "Spoopy")
 end
 
+local ddrillini_letters = { 'd_1', 'd_2', 'r', 'i_1', 'l_1', 'l_2', 'i_2', 'n', 'i_3' }
+
 local af = Def.ActorFrame{
 	InitCommand=function(self)
 		--see: ./Scripts/SL_Initialize.lua
@@ -67,12 +69,44 @@ local af = Def.ActorFrame{
 	-- },
 
 	-- SIMPLY XXXXX where XXXXX = love, arrows, spooky, etc
+	-- ScreenLogo underlay.lua also does this.
 	-- LoadActor("Simply".. image .." (doubleres).png") .. {
-	LoadActor("ddrillini.png") .. { -- DDRILLINI hacks
-		InitCommand=function(self) self:x(2):zoom(0.7):shadowlength(0.75) end,
-		OffCommand=function(self) self:linear(0.5):shadowlength(0) end
-	}
+	-- LoadActor("ddrillini/ddrillini.png") .. {
+	-- 	InitCommand=function(self) self:x(2):zoom(0.7):shadowlength(0.75) end,
+	-- 	OffCommand=function(self) self:linear(0.5):shadowlength(0) end
+	-- },
 }
+
+for i=1,9 do
+	af[#af+1] = Def.ActorFrame {
+		LoadActor("ddrillini/" .. ddrillini_letters[i] .. ".png") .. {
+	-- There appear to be two different syntaxes: `function(self)` and `cmd`.
+			InitCommand=function(self)
+				self
+				-- positioning, sizing, shadow
+				:x(2) :zoom(0.7) :shadowlength(0.75)
+				-- fading in
+				:diffusealpha(0)
+			end,
+
+			OnCommand=function(self)
+				self
+				-- delay each letter by a bit more each time
+				:sleep(i*0.1 + 0.2)
+				:linear(.75)
+				:diffusealpha(1)
+			end,
+
+			OffCommand=function(self)
+				self
+				-- fading out
+				:linear(0.5)
+				:shadowlength(0)
+			end,
+
+		}
+	}
+end
 
 -- the best way to spread holiday cheer is singing loud for all to hear
 if PREFSMAN:GetPreference("EasterEggs") and MonthOfYear()==11 then
