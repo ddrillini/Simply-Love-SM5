@@ -8,36 +8,35 @@ if SL.Global.GameMode ~= "StomperZ" then
 	local title = GAMESTATE:GetCurrentSong():GetDisplayFullTitle()
 	if title == "D" then grade = "Grade_Tier99" end
 
-	-- Glowing grades, by Sangyeol Baek
-	local FCcolor = nil
-	local isStarRating = (grade == "Grade_Tier01") or (grade == "Grade_Tier02") or (grade == "Grade_Tier03") or (grade == "Grade_Tier04")
-	local failed = (grade == "Grade_Failed")
-	if (isStarRating == false) and (failed == false) then
-		if SL.Global.GameMode == "ECFA" then
-			if playerStats:FullComboOfScore('TapNoteScore_W1') then
-				FCcolor = color("#6BF0FF") -- blue
-			elseif playerStats:FullComboOfScore('TapNoteScore_W2') then
-				FCcolor = color("#6BF0FF") -- blue
-			elseif playerStats:FullComboOfScore('TapNoteScore_W3') then
-				FCcolor = color("#FDDB85") -- gold
-			elseif playerStats:FullComboOfScore('TapNoteScore_W4') then
-				FCcolor = color("#94FEC1") -- green
-			else
-				FCcolor = nil -- nothing
-			end
-		else
-			if playerStats:FullCombo() then
-				if playerStats:FullComboOfScore('TapNoteScore_W1') then
-					FCcolor = color("#6BF0FF") -- blue
-				elseif playerStats:FullComboOfScore('TapNoteScore_W2') then
-					FCcolor = color("#FDDB85") -- gold
-				else
-					FCcolor = color("#94FEC1") -- green
-				end
+	-- Sangyeol's additions
+	-- only applies to letter grades since stars won't animate properly
+	local mode = SL.Global.GameMode
+	local Blue, Gold, Green = "#21CCE8", "#E29C18", "#66C955"
+	local FCglow = nil
+	local FCcolors = {
+		Casual = {Blue, Gold, Green, nil},
+		Competitive = {Blue, Gold, Green, nil},
+		ECFA = {Blue, Blue, Gold, Green}
+	}
+
+	local isStarRating = false
+	for i=1,4 do
+		if (grade == ("Grade_Tier0"..i)) then
+			isStarRating = true
+			break
+		end
+	end
+
+	if grade ~= "Grade_Failed" and (isStarRating == false) then
+		for i=1,4 do
+			if playerStats:FullComboOfScore('TapNoteScore_W'..i) then
+				FCglow = FCcolors[mode][i]
+				break
 			end
 		end
-	end -- end glowing grades logic
-
+	end
+	-- end of additions
+	
 	local t = Def.ActorFrame{}
 
 	t[#t+1] = LoadActor(THEME:GetPathG("", "_grades/"..grade..".lua"), playerStats)..{
@@ -47,6 +46,15 @@ if SL.Global.GameMode ~= "StomperZ" then
 			if pn == PLAYER_1 then
 				self:x( self:GetX() * -1 )
 			end
+
+			-- additions
+			if FCglow ~= nil then
+				self:diffuseshift()
+				self:effectcolor1(color("#FFFFFF"))
+				self:effectcolor2(color(FCglow))
+				self:effectperiod(1.25)
+			end
+			-- end additions
 		end
 	}
 
