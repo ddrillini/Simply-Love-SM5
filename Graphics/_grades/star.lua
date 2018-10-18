@@ -3,9 +3,19 @@
 
 local pss = ...
 local t = Def.ActorFrame{}
-local isECFA = (SL.Global.GameMode == "ECFA")
-local FCcolor = "#FFFFFF"
 
+-- added
+local mode = SL.Global.GameMode
+local isECFA = (mode == "ECFA")
+local glowColor = nil
+local Blue, Gold, Green = "#21CCE8", "#E29C18", "#66C955"
+local FCcolor = {
+   Casual={ Blue, Gold, Green, nil },
+   Competitive={ Blue, Gold, Green, nil },
+   ECFA={ Blue, Blue, Gold, Green }
+}
+
+-- flag (all fantastics except 1 ex): stars
 t[#t+1] = LoadActor("graphics/star.png")..{
 	OnCommand=function(self)
 		if pss ~= nil and pss:GetTapNoteScores('TapNoteScore_Miss') == 0 and
@@ -15,42 +25,39 @@ t[#t+1] = LoadActor("graphics/star.png")..{
 				pss:GetTapNoteScores('TapNoteScore_W2') == 1 then
 			self:sleep(2)
 			self:queuecommand('Animate')
+		elseif pss ~= nil and isECFA and
+			-- all blue fantastics (ECFA only)
+			pss:GetTapNoteScores('TapNoteScore_Miss') == 0 and
+			pss:GetTapNoteScores('TapNoteScore_W5') == 0 and
+			pss:GetTapNoteScores('TapNoteScore_W4') == 0 and
+			pss:GetTapNoteScores('TapNoteScore_W3') == 0 and
+			pss:GetTapNoteScores('TapNoteScore_W2') == 0 and
+			pss:GetTapNoteScores('TapNoteScore_W1') > 0 and
+			pss:GetHoldNoteScores('HoldNoteScore_LetGo') == 0 and
+			pss:GetTapNoteScores('TapNoteScore_HitMine') == 0 then
+			self:rainbow()
+			self:effectperiod(2 + 1.5 * math.random())
 		else
-			-- Glowing Grades
-			if pss ~= nil and pss:GetHoldNoteScores('HoldNoteScore_LetGo') == 0 and
+			-- glow grades
+			if pss ~= nil and
+				pss:GetHoldNoteScores('HoldNoteScore_LetGo') == 0 and
 				pss:GetTapNoteScores('TapNoteScore_Miss') == 0 and
 				pss:GetTapNoteScores('TapNoteScore_W5') == 0 then
-				if pss:GetTapNoteScores('TapNoteScore_W4') > 0 then
-					if isECFA then
-						FCcolor = "#94FEC1" -- ECFA FGC
-					end
-				else
-					-- pss:GetTapNoteScores('TapNoteScore_W4') == 0
-					if pss:GetTapNoteScores('TapNoteScore_W3') > 0 then
-						if isECFA then
-							FCcolor = "#FDDB85" -- ECFA FEC
-						else
-							FCcolor = "#94FEC1" -- FGC
-						end
-					else
-						-- pss:GetTapNoteScores('TapNoteScore_W3') == 0
-						if pss:GetTapNoteScores('TapNoteScore_W2') > 1 then
-							if isECFA then
-								FCcolor = "#6BF0FF" -- ECFA FFC
-							else
-								FCcolor = "#FDDB85" -- FEC
-							end
-						else
-							-- pss:GetTapNoteScores('TapNoteScore_W2') == 0
-							FCcolor = "#6BF0FF" -- general FFC
-						end
+				for k=4,1,-1 do
+					if pss:GetTapNoteScores('TapNoteScore_W'..k) > 0 then
+						glowColor = FCcolor[mode][k]
+						break
 					end
 				end
 			end
-			self:diffuseshift():effectperiod(1.5)
-			self:effectcolor1( color("#FFFFFF") )
-			self:effectcolor2( color(FCcolor) )
-			-- Glowing Grades end
+
+			if glowColor ~= nil then
+				self:diffuseshift()
+				self:effectperiod(1.25)
+				self:effectcolor1(color("#FFFFFF"))
+				self:effectcolor2(color(glowColor))
+			end
+			-- end of my additions
 		end
 	end,
 	AnimateCommand=function(self)
