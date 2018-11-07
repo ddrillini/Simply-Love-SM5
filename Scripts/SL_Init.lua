@@ -136,7 +136,7 @@ SL = {
 			color("#5b2b8e"),	-- purple
 			color("#ff0000")	-- red
 		},
-		-- DEMONIC SETTINGS ACCURATE AS OF 2018-05-01
+		-- demonic, aka 'FA+'
 		StomperZ = {
 			color("#ffffff"),	-- white
 			color("#ffaa11"),	-- yellow-ish
@@ -207,6 +207,8 @@ SL = {
 			TimingWindowSecondsW3=0.020,
 			TimingWindowSecondsW4=0.040,
 			TimingWindowSecondsW5=0.070,
+			-- these can't be touched because lol ITG.
+			-- fair hold would be like 0.20-0.25 or so
 			TimingWindowSecondsHold=0.320,
 			TimingWindowSecondsMine=0.070000,
 			TimingWindowSecondsRoll=0.350000,
@@ -327,15 +329,17 @@ SL = {
 			GradeWeightHeld=10,
 			GradeWeightHitMine=0,
 
-			LifePercentChangeW1=0.002,
-			LifePercentChangeW2=0.002,
-			LifePercentChangeW3=0.002,
+			-- key ideas: 50 hits/miss is probably around where we want it.
+			-- -0.05 miss makes top half of lifebar as harsh as ITG.
+			LifePercentChangeW1=0.001,
+			LifePercentChangeW2=0.001,
+			LifePercentChangeW3=0.001,
 			LifePercentChangeW4=0.001,
-			LifePercentChangeW5=-0.04,
-			LifePercentChangeMiss=-0.1,
-			LifePercentChangeLetGo=-0.04,
-			LifePercentChangeHeld=0.001,
-			LifePercentChangeHitMine=0,
+			LifePercentChangeW5=-0.02,
+			LifePercentChangeMiss=-0.05,
+			LifePercentChangeLetGo=-0.02,
+			LifePercentChangeHeld=0,
+			LifePercentChangeHitMine=0, -- just look at the results screen
 		},
 	}
 }
