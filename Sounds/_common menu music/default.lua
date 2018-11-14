@@ -5,7 +5,7 @@ local songs = {
 	Ducks = "Xuxa fami VRC6 (loop).ogg",
 	Gay = "Mystical Wheelbarrow Journey (loop).ogg",
 	Spooky = "Spooky Scary Chiptunes (loop).ogg",
-	owo = "owo what's this (loop).ogg"
+	owo = "owo what's this (loop).ogg" -- hewwo from kysee
 }
 
 local audio_file =  songs[ ThemePrefs.Get("VisualTheme") ]
