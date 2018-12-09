@@ -13,6 +13,7 @@ end
 
 -- - - - - - - - - - - - - - - - - - - - -
 local sm_version = ""
+local sl_version = GetThemeVersion()
 
 if ProductVersion():find("git") then
 	local date = VersionDate()
