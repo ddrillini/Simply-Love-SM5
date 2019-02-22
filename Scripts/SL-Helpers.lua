@@ -303,3 +303,20 @@ function GetJudgmentGraphics(mode)
 
 	return judgment_graphics
 end
+
+-- Check if song is part of no cmod group for RIP11, simple way by going through no cmod songs
+-- Note: If cmod was force changed from this and a player doesn't go into the options
+-- screen, cmod will still not be applied, otherwise fine. Look into how this can be fixed.
+function Rip11CmodAllowed()
+	local notAllowed = {
+		"Capitalism Cannon", "Don't Die", "I Hold Still",
+		"Oboro", "Quake", "Static State", "Tech-noid", "Wavey"
+	}
+	local currentSong = GAMESTATE:GetCurrentSong():GetDisplayMainTitle()
+	for i = 1, #notAllowed do
+		if currentSong == notAllowed[i] then
+			return nil
+		end
+	end
+	return 1
+end

@@ -60,7 +60,11 @@ local Overrides = {
 			if type == "x" then
 				playeroptions:XMod(speed)
 			elseif type == "C" then
-				playeroptions:CMod(speed)
+				if Rip11CmodAllowed() then
+					playeroptions:CMod(speed)
+				else
+					playeroptions:MMod(speed)
+				end
 			elseif type == "M" then
 				playeroptions:MMod(speed)
 			end
