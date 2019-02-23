@@ -71,6 +71,7 @@ local EnableChoices = function()
 		if GAMESTATE:EnoughCreditsToJoin()
 		or #GAMESTATE:GetHumanPlayers() == 2 then
 			af:GetChild("")[2].Enabled = true
+			af:GetChild("")[4].Enabled = true
 		end
 	end
 
@@ -83,6 +84,7 @@ local EnableChoices = function()
 		or #GAMESTATE:GetHumanPlayers() == 2 then
 			af:GetChild("")[2].Enabled = true
 			af:GetChild("")[3].Enabled = true
+			af:GetChild("")[4].Enabled = true
 		end
 	end
 
@@ -119,7 +121,8 @@ end
 
 local JoinOrUnjoinPlayersMaybe = function(style, player)
 	-- if going into versus, ensure that both players are joined
-	if style == "versus" then
+	-- TODO: determine whether routine expects one or both players to be joined.
+	if (style=="versus" or style=="routine") then
 		for player in ivalues({PLAYER_1, PLAYER_2}) do
 			if not GAMESTATE:IsHumanPlayer(player) then GAMESTATE:JoinPlayer(player) end
 		end
@@ -161,20 +164,21 @@ local ManageCredits = function(style)
 		return
 	end
 
-	-- double for 1 credit; insert 1 credit if entering double and 2 players were joined from the title screen
+	-- double for 1 credit; insert 1 credit if entering double/routine and
+	-- 2 players were joined from the title screen
 	if GAMESTATE:GetCoinMode() == "CoinMode_Pay"
 	and GAMESTATE:GetPremium() == "Premium_DoubleFor1Credit"
 	and #GAMESTATE:GetHumanPlayers() == 2
-	and style == "double" then
+	and (style == "double" or style=="routine") then
 		GAMESTATE:InsertCredit()
 		return
 	end
 
-	-- premium off; deduct 1 credit if entering versus or double
+	-- premium off; deduct 1 credit if entering versus or double or routine
 	if GAMESTATE:GetCoinMode() == "CoinMode_Pay"
 	and GAMESTATE:GetPremium() == "Premium_Off"
 	and #GAMESTATE:GetHumanPlayers() == 1
-	and (style=="versus" or style=="double") then
+	and (style=="versus" or style=="double" or style=="routine") then
 		GAMESTATE:InsertCoin( -GAMESTATE:GetCoinsNeededToJoin() )
 		return
 	end
@@ -304,6 +308,7 @@ local t = Def.ActorFrame{
 }
 
 for i,choice in ipairs(choices) do
+	-- TODO: i believe "draw pads" might be a better name for this file.
 	t[#t+1] = LoadActor("./choice.lua", {choice, i} )
 end
 
