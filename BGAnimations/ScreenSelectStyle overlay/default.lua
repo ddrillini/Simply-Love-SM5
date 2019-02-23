@@ -4,16 +4,44 @@ local af
 local current_game = GAMESTATE:GetCurrentGame():GetName()
 ------------------------------------------------------------------------------------
 
+-- TODO: KNOWN BUG: enabling solo will make routine/couples inaccessible
+-- Frankly, this probably isn't a problem....
+
+-- WideScale is a builtin in _fallback/Scripts/02 Utilities.lua
+-- I believe it scales your coordinates to WideScreen.
+
 local xshift = WideScale(42,52)
 local choices = {
-	{ name="single", pads={{3, -xshift-14}}, x=_screen.cx-_screen.w/4 },
-	{ name="versus", pads={{2, -xshift-WideScale(60,70)}, {5, xshift-WideScale(60,70)}}, x=_screen.cx },
-	{ name="double", pads={{4,-xshift-WideScale(60,70)}, {4, xshift-WideScale(60,70)}}, x=_screen.cx+_screen.w/4 },
+	{ 
+		name="single",
+			-- used to pick game mode via engine functions
+		pads={{3, -xshift-14}},
+			-- passed to drawNinePanelPad(color, xoffset)
+			-- xoffset is the offset of the pad relative to text
+		x=_screen.w/4-_screen.w/8
+			-- moves to be 1/4 of the screen left of the center
+	},
+
+	{ 
+		name="versus",
+		pads={{2, -xshift-WideScale(60,70)}, {5, xshift-WideScale(60,70)}},
+		x=(_screen.w/4)*2-_screen.w/8
+	},
+
+	{ 
+		name="double",
+		pads={{4,-xshift-WideScale(60,70)}, {4, xshift-WideScale(60,70)}},
+		x=(_screen.w/4)*3-_screen.w/8 },
+
+	{ 
+		name="routine",
+		pads= {{2,-xshift-WideScale(60,70) }, {5, xshift-WideScale(60,70) } },
+		x=_screen.w-_screen.w/8
+	},
 }
+
+-- If solo is enabled in Options > Simply Love settings, then overwrite couples.
 if current_game=="dance" and ThemePrefs.Get("AllowDanceSolo") then
-	choices[1].x = _screen.w/4-_screen.w/8
-	choices[2].x = (_screen.w/4)*2-_screen.w/8
-	choices[3].x = (_screen.w/4)*3-_screen.w/8
 	choices[4] = { name="solo", pads={ {3, -xshift-14}}, x=_screen.w-_screen.w/8 }
 end
 
@@ -230,15 +258,18 @@ local t = Def.ActorFrame{
 			end
 		end
 	end,
+
 	OnCommand=function(self)
 		if PREFSMAN:GetPreference("MenuTimer") then
 			self:queuecommand("Listen")
 		end
 	end,
+
 	CoinsChangedMessageCommand=function(self)
 		EnableChoices()
 		self:playcommand("Enable")
 	end,
+
 	ListenCommand=function(self)
 		local topscreen = SCREENMAN:GetTopScreen()
 		local seconds = topscreen:GetChild("Timer"):GetSeconds()
@@ -250,9 +281,11 @@ local t = Def.ActorFrame{
 			self:queuecommand("Listen")
 		end
 	end,
+
 	CaptureCommand=function(self)
 		SCREENMAN:GetTopScreen():AddInputCallback(input)
 	end,
+
 	FinishCommand=function(self, params)
 		local style = choices[current_index].name
 

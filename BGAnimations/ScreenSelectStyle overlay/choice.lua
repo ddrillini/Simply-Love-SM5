@@ -181,6 +181,7 @@ local af = Def.ActorFrame{
 		end
 	 end,
 
+	-- Draw text under the pads
 	LoadFont("_wendy small")..{
 		Text=THEME:GetString("ScreenSelectStyle", choiceName:gsub("^%l", string.upper)),
 		InitCommand=function(self)
