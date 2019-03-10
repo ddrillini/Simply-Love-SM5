@@ -17,3 +17,7 @@ This theme requires StepMania 5.0.12 or StepMania 5.1 betas.
 * Non-English language files are not being actively maintained.
 
 * The bundled judgement font set bundled includes most publicly available options. Please note that these are NOT under the MIT license to the best of our knowledge.
+
+# Other interesting projects
+
+* https://github.com/Sereni/Simply-Love-Modular - An effort to modularize Simply Love so that its useful features can be used in other themes.
