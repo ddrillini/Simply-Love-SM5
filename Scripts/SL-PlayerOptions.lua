@@ -511,9 +511,6 @@ function ApplyMods(player)
 		-- SaveSelections() expects the same sort of arguments, but it expects the true/false table to be already set appropriately
 		-- thus, we pass in the list that was returned from LoadSelections()
 		local list = {}
-		if name == "Exit" and Rip11CmodAllowed() == nil then
-			debug.debug()
-		end
 		for i=1, #OptRow.Choices do
 			list[i] = false
 		end
