@@ -310,11 +310,22 @@ end
 function Rip11CmodAllowed()
 	local notAllowed = {
 		"Capitalism Cannon", "Don't Die", "I Hold Still",
-		"Oboro", "Quake", "Static State", "Tech-noid", "Wavey"
+		"Oboro", "QUAKE", "Static State", "TECH-NOID", "Wavey"
 	}
+	local Players = GAMESTATE:GetHumanPlayers()
+	local detected = nil
+	for pn in ivalues(Players) do
+		if SL[ToEnumShortString(pn)].ActiveModifiers.SpeedModType == "C" then
+			detected = 1
+			break
+		end
+	end
+	if detected == nil then
+		return 1
+	end
 	local currentSong = GAMESTATE:GetCurrentSong():GetDisplayMainTitle()
 	for i = 1, #notAllowed do
-		if currentSong == notAllowed[i] then
+		if currentSong:lower() == notAllowed[i]:lower() then
 			return nil
 		end
 	end

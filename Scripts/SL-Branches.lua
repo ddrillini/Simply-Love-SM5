@@ -124,7 +124,11 @@ Branch.PlayerOptions = function()
 	if SCREENMAN:GetTopScreen():GetGoToOptions() then
 		return "ScreenPlayerOptions"
 	else
-		return "ScreenGameplay"
+		if Rip11CmodAllowed() == nil then
+			return "ScreenPlayerOptions"
+		else			
+			return "ScreenGameplay"
+		end
 	end
 end
 

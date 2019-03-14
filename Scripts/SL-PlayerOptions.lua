@@ -11,6 +11,16 @@ local function GetModsAndPlayerOptions(player)
 	return mods, playeroptions
 end
 
+-- Makes sure player can't move forward if cmod detected and not an allowed song.
+local function setBranchOrOptions(option1, option2)
+	cmodNotDetected = Rip11CmodAllowed()
+	if cmodNotDetected ~= 1 then
+		SL.Global.ScreenAfter.PlayerOptions = option1
+	else
+		SL.Global.ScreenAfter.PlayerOptions = option2
+	end
+end
+
 ------------------------------------------------------------
 -- Define what custom OptionRows there are, and override the
 -- generic OptionRow (defined later, below) for each as necessary.
@@ -60,11 +70,7 @@ local Overrides = {
 			if type == "x" then
 				playeroptions:XMod(speed)
 			elseif type == "C" then
-				if Rip11CmodAllowed() then
-					playeroptions:CMod(speed)
-				else
-					playeroptions:MMod(speed)
-				end
+				playeroptions:CMod(speed)
 			elseif type == "M" then
 				playeroptions:MMod(speed)
 			end
@@ -376,9 +382,9 @@ local Overrides = {
 		end,
 		SaveSelections = function(self, list, pn)
 			if SL.Global.MenuTimer.ScreenSelectMusic > 1 then
-				if list[1] then SL.Global.ScreenAfter.PlayerOptions = Branch.GameplayScreen() end
+				if list[1] then setBranchOrOptions("ScreenPlayerOptions", Branch.GameplayScreen()) end
 				if list[2] then SL.Global.ScreenAfter.PlayerOptions = SelectMusicOrCourse() end
-				if list[3] then SL.Global.ScreenAfter.PlayerOptions = "ScreenPlayerOptions2" end
+				if list[3] then setBranchOrOptions("ScreenPlayerOptions", "ScreenPlayerOptions") end
 			else
 				if list[1] then SL.Global.ScreenAfter.PlayerOptions = Branch.GameplayScreen() end
 				if list[2] then SL.Global.ScreenAfter.PlayerOptions = "ScreenPlayerOptions2" end
@@ -505,6 +511,9 @@ function ApplyMods(player)
 		-- SaveSelections() expects the same sort of arguments, but it expects the true/false table to be already set appropriately
 		-- thus, we pass in the list that was returned from LoadSelections()
 		local list = {}
+		if name == "Exit" and Rip11CmodAllowed() == nil then
+			debug.debug()
+		end
 		for i=1, #OptRow.Choices do
 			list[i] = false
 		end
