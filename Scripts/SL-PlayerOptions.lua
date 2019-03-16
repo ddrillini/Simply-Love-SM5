@@ -384,7 +384,7 @@ local Overrides = {
 			if SL.Global.MenuTimer.ScreenSelectMusic > 1 then
 				if list[1] then setBranchOrOptions("ScreenPlayerOptions", Branch.GameplayScreen()) end
 				if list[2] then SL.Global.ScreenAfter.PlayerOptions = SelectMusicOrCourse() end
-				if list[3] then setBranchOrOptions("ScreenPlayerOptions", "ScreenPlayerOptions") end
+				if list[3] then setBranchOrOptions("ScreenPlayerOptions", "ScreenPlayerOptions2") end
 			else
 				if list[1] then SL.Global.ScreenAfter.PlayerOptions = Branch.GameplayScreen() end
 				if list[2] then SL.Global.ScreenAfter.PlayerOptions = "ScreenPlayerOptions2" end
