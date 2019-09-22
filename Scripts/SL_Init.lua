@@ -206,9 +206,9 @@ SL = {
 			TimingWindowSecondsW2=0.010,
 			TimingWindowSecondsW3=0.020,
 			TimingWindowSecondsW4=0.040,
-			TimingWindowSecondsW5=0.070,
-			-- these can't be touched because lol ITG.
-			-- fair hold would be like 0.20-0.25 or so
+			TimingWindowSecondsW5=0.070, -- roughly inner half of ITG great window
+			-- On keyboard, this would ideally be 0.2 seconds
+			-- but most charts now are written with the ITG 0.32 second standard in mind
 			TimingWindowSecondsHold=0.320,
 			TimingWindowSecondsMine=0.070000,
 			TimingWindowSecondsRoll=0.350000,
@@ -316,8 +316,8 @@ SL = {
 			PercentScoreWeightW5=0,
 			PercentScoreWeightMiss=0,
 			PercentScoreWeightLetGo=0,
-			PercentScoreWeightHeld=10,
-			PercentScoreWeightHitMine=0,
+			PercentScoreWeightHeld=5,
+			PercentScoreWeightHitMine=0, -- just look at the results screen
 
 			GradeWeightW1=10,
 			GradeWeightW2=9,
@@ -326,20 +326,18 @@ SL = {
 			GradeWeightW5=0,
 			GradeWeightMiss=0,
 			GradeWeightLetGo=0,
-			GradeWeightHeld=10,
+			GradeWeightHeld=5,
 			GradeWeightHitMine=0,
 
-			-- key ideas: 50 hits/miss is probably around where we want it.
-			-- -0.05 miss makes top half of lifebar as harsh as ITG.
-			LifePercentChangeW1=0.001,
-			LifePercentChangeW2=0.001,
-			LifePercentChangeW3=0.001,
-			LifePercentChangeW4=0.001,
-			LifePercentChangeW5=-0.02,
-			LifePercentChangeMiss=-0.05,
+			LifePercentChangeW1=0.002,
+			LifePercentChangeW2=0.002,
+			LifePercentChangeW3=0.002,
+			LifePercentChangeW4=0.002,
+			LifePercentChangeW5=-0.02, -- 10 hits/attempt
+			LifePercentChangeMiss=-0.05, -- 25 hits/miss, twice as "deep" as ITG lifebar
 			LifePercentChangeLetGo=-0.02,
 			LifePercentChangeHeld=0,
-			LifePercentChangeHitMine=0, -- just look at the results screen
+			LifePercentChangeHitMine=0,
 		},
 	}
 }
