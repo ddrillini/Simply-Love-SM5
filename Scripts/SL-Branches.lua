@@ -12,29 +12,6 @@ SelectMusicOrCourse = function()
 	end
 end
 
-Branch.AllowScreenNameEntry = function()
-
-	-- If we're in Casual mode, don't allow NameEntry, and don't
-	-- bother saving the profile(s). Skip directly to GameOver.
-	if SL.Global.GameMode == "Casual" then
-		return Branch.AfterProfileSaveSummary()
-
-	elseif ThemePrefs.Get("AllowScreenNameEntry") then
-		return "ScreenNameEntryTraditional"
-
-	else
-		return "ScreenProfileSaveSummary"
-	end
-end
-
-Branch.AllowScreenEvalSummary = function()
-	if ThemePrefs.Get("AllowScreenEvalSummary") then
-		return "ScreenEvaluationSummary"
-	else
-		return Branch.AllowScreenNameEntry()
-	end
-end
-
 Branch.AllowScreenSelectProfile = function()
 	if ThemePrefs.Get("AllowScreenSelectProfile") then
 		return "ScreenSelectProfile"
@@ -45,6 +22,7 @@ end
 
 Branch.AllowScreenSelectColor = function()
 	if ThemePrefs.Get("AllowScreenSelectColor") and not ThemePrefs.Get("RainbowMode") then
+		if ThemePrefs.Get("VisualTheme") == "Thonk" then return "ScreenSelectColorThonk" end
 		return "ScreenSelectColor"
 	else
 		return Branch.AfterScreenSelectColor()
@@ -64,21 +42,23 @@ Branch.AfterScreenSelectColor = function()
 			GAMESTATE:JoinPlayer(PLAYER_1)
 			GAMESTATE:JoinPlayer(PLAYER_2)
 
-		-- if "single" but both players are already joined (for whatever reason),
-		-- we're in a bit of a pickle, as there is no way to read the player's mind
-		-- and know which side they really want to play on
-		-- Unjoin PLAYER_2 for lack of a better solution
+		-- if AutoStyle was "single" but both players are already joined
+		-- (for whatever reason), we're in a bit of a pickle, as there is
+		-- no way to read the player's mind and know which side they really
+		-- want to play on. Unjoin PLAYER_2 for lack of a better solution.
 		elseif preferred_style == "single" then
 			GAMESTATE:UnjoinPlayer(PLAYER_2)
 		end
 
+		-- FIXME: there's probably a more sensible place to set the current style for
+		-- the engine, but I guess we're doing it here, in SL-Branches.lua, for now.
 		GAMESTATE:SetCurrentStyle( preferred_style )
-		-- set this here to be used later with the continue system
-		SL.Global.Gamestate.Style = preferred_style
 
+		if ThemePrefs.Get("VisualTheme") == "Thonk" then return "ScreenSelectPlayModeThonk" end
 		return "ScreenSelectPlayMode"
 	end
 
+	if ThemePrefs.Get("VisualTheme") == "Thonk" then return "ScreenSelectStyleThonk" end
 	return "ScreenSelectStyle"
 end
 
@@ -120,10 +100,17 @@ Branch.AfterHeartEntry = function()
 	if( pm == "Nonstop" ) then return "ScreenEvaluationNonstop" end
 end
 
-Branch.PlayerOptions = function()
+Branch.AfterSelectMusic = function()
 	if SCREENMAN:GetTopScreen():GetGoToOptions() then
 		return "ScreenPlayerOptions"
 	else
+		-- routine mode specifically uses ScreenGameplayShared
+		local style = GAMESTATE:GetCurrentStyle():GetName()
+		if style == "routine" then
+			return "ScreenGameplayShared"
+		end
+
+		-- while everything else (single, versus, double, etc.) uses ScreenGameplay
 		return "ScreenGameplay"
 	end
 end
@@ -137,6 +124,56 @@ Branch.SSMCancel = function()
 	return Branch.TitleMenu()
 end
 
+Branch.AllowScreenNameEntry = function()
+
+	-- If we're in Casual mode, don't allow NameEntry, and don't
+	-- bother saving the profile(s). Skip directly to GameOver.
+	if SL.Global.GameMode == "Casual" then
+		return Branch.AfterProfileSaveSummary()
+
+	elseif ThemePrefs.Get("AllowScreenNameEntry") then
+		return "ScreenNameEntryTraditional"
+
+	else
+		return "ScreenProfileSaveSummary"
+	end
+end
+
+Branch.AllowScreenEvalSummary = function()
+	if ThemePrefs.Get("AllowScreenEvalSummary") then
+		return "ScreenEvaluationSummary"
+	else
+		return Branch.AllowScreenNameEntry()
+	end
+end
+
+
+local EnoughCreditsToContinue = function()
+	local credits = GetCredits().Credits
+	local premium = GAMESTATE:GetPremium()
+	local style = GAMESTATE:GetCurrentStyle():GetName():gsub("8", "")
+
+	if premium == "Premium_2PlayersFor1Credit" and credits > 0 then return true end
+
+	if premium == "Premium_DoubleFor1Credit" then
+		if style == "versus" then
+			if credits > 1 then return true end
+		else
+			if credits > 0 then return true end
+		end
+	end
+
+	if premium == "Premium_Off" then
+		if style == "single" then
+			if credits > 0 then return true end
+		else
+			if credits > 1 then return true end
+		end
+	end
+
+	return false
+end
+
 Branch.AfterProfileSave = function()
 
 	if PREFSMAN:GetPreference("EventMode") then
@@ -147,7 +184,7 @@ Branch.AfterProfileSave = function()
 
 	else
 
-		-- deduct the number of stages that stock Stepmania says the song is
+		-- deduct the number of stages that stock StepMania says the song is
 		local song = GAMESTATE:GetCurrentSong()
 		local SMSongCost = (song:IsMarathon() and 3) or (song:IsLong() and 2) or 1
 		SL.Global.Stages.Remaining = SL.Global.Stages.Remaining - SMSongCost
@@ -172,9 +209,8 @@ Branch.AfterProfileSave = function()
 			SL.Global.Stages.Remaining = SL.Global.Stages.Remaining + StagesToAddBack
 		end
 
-		-- Now, check if StepMania and SL disagree on the stage count
-		-- If necessary, add stages back
-		-- This might be necessary because
+		-- Now, check if StepMania and SL disagree on the stage count. If necessary, add stages back.
+		-- This might be necessary because:
 		-- a) a Lua chart reloaded ScreenGameplay, or
 		-- b) everyone failed, and StepmMania zeroed out the stage numbers
 		if GAMESTATE:GetNumStagesLeft(GAMESTATE:GetMasterPlayerNumber()) < SL.Global.Stages.Remaining then
@@ -200,8 +236,7 @@ Branch.AfterProfileSave = function()
 		if setOver then
 			-- continues are only allowed in Pay mode
 			if PREFSMAN:GetPreference("CoinMode") == "CoinMode_Pay" then
-				local credits = GetCredits()
-				if SL.Global.ContinuesRemaining > 0 and credits.Credits > 0 then
+				if SL.Global.ContinuesRemaining > 0 and EnoughCreditsToContinue() then
 					return "ScreenPlayAgain"
 				end
 			end

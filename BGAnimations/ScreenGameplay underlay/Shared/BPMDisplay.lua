@@ -45,7 +45,7 @@ local SingleBPMDisplay = function()
 	return Def.ActorFrame{
 		InitCommand=cmd(SetUpdateFunction,UpdateSingleBPM),
 
-		LoadFont("_miso")..{
+		LoadFont("Common Normal")..{
 			Name="BPMDisplay",
 			InitCommand=function(self)
 				self:zoom(1)
@@ -60,14 +60,14 @@ local DualBPMDisplay = function()
 		InitCommand=function(self) self:SetUpdateFunction(Update2PBPM) end,
 
 		-- manual bpm displays
-		LoadFont("_miso")..{
+		LoadFont("Common Normal")..{
 			Name="DisplayP1",
 			InitCommand=function(self)
 				self:x(-18):zoom(1):shadowlength(1)
 				dispP1 = self
 			end
 		},
-		LoadFont("_miso")..{
+		LoadFont("Common Normal")..{
 			Name="DisplayP2",
 			InitCommand=function(self)
 				self:x(18):zoom(1):shadowlength(1)
@@ -83,14 +83,17 @@ local t = Def.ActorFrame{
 	InitCommand=function(self)
 		self:xy(_screen.cx, 52):valign(1)
 
-		if SL.Global.GameMode == "StomperZ" then
-			self:zoom(1)
-		else
-			self:zoom(1.33)
+		if PREFSMAN:GetPreference("Center1Player") and #GAMESTATE:GetHumanPlayers() == 1 then
+			local mpn = GAMESTATE:GetMasterPlayerNumber()
+			if SL[ToEnumShortString(mpn)].ActiveModifiers.NPSGraphAtTop then
+				self:x(_screen.cx + GetNotefieldWidth(mpn) * (mpn==PLAYER_1 and 1 or -1))
+			end
 		end
+
+		self:zoom(SL.Global.GameMode == "StomperZ" and 1 or 1.33)
 	end,
 
-	LoadFont("_miso")..{
+	LoadFont("Common Normal")..{
 		Name="RatemodDisplay",
 		Text=MusicRate ~= 1 and MusicRate.."x rate" or "",
 		InitCommand=function(self)

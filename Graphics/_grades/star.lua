@@ -16,7 +16,7 @@ local FCcolor = {
 }
 
 -- flag (all fantastics except 1 ex): stars
-t[#t+1] = LoadActor("graphics/star.png")..{
+t[#t+1] = LoadActor("./assets/star.png")..{
 	OnCommand=function(self)
 		if pss ~= nil and pss:GetTapNoteScores('TapNoteScore_Miss') == 0 and
 				pss:GetTapNoteScores('TapNoteScore_W5') == 0 and
@@ -66,7 +66,7 @@ t[#t+1] = LoadActor("graphics/star.png")..{
 	end,
 }
 
-t[#t+1] = LoadActor("graphics/star.png")..{
+t[#t+1] = LoadActor("./assets/star.png")..{
 	OnCommand=function(self)
 		self:visible(false)
 		if pss ~= nil and pss:GetTapNoteScores('TapNoteScore_Miss') == 0 and
@@ -99,7 +99,7 @@ t[#t+1] = LoadActor("graphics/star.png")..{
 	end,
 }
 
-t[#t+1] = LoadActor("graphics/affluent.png")..{
+t[#t+1] = LoadActor("./assets/affluent.png")..{
 	OnCommand=function(self)
 		self:y(10)
 		self:zoom(1.2)
@@ -134,7 +134,7 @@ t[#t+1] = LoadActor("graphics/affluent.png")..{
 	end,
 }
 
-t[#t+1] = LoadActor("graphics/goldstar (stretch).png")..{
+t[#t+1] = LoadActor("./assets/goldstar (stretch).png")..{
 	InitCommand=function(self)
 		self:visible(false)
 	end,

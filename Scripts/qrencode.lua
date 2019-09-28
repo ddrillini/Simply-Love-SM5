@@ -1357,18 +1357,37 @@ qrcode_amv = function( url, size )
 		for m, module in ipairs(column) do
 			local clr = (module > 0) and Color.Black or Color.White
 
-			table.insert( verts, {{m-1,	c-1, 	0}, clr } )
-			table.insert( verts, {{m, 	c-1, 	0}, clr } )
-			table.insert( verts, {{m, 	c, 		0}, clr } )
-			table.insert( verts, {{m-1, c, 		0}, clr } )
+			table.insert( verts, {{m-1, c-1, 0}, clr } )
+			table.insert( verts, {{m,   c-1, 0}, clr } )
+			table.insert( verts, {{m,   c,   0}, clr } )
+			table.insert( verts, {{m-1, c,   0}, clr } )
 		end
 	end
 
-	return Def.ActorMultiVertex{
+	local qr = Def.ActorFrame{
+		InitCommand=function(self)
+		  self:visible(true)
+		end
+	}
+
+	local pixel_size = size/#tab_or_message
+
+	qr[#qr+1] = Def.Quad{
+		InitCommand=function(self)
+			self:zoom(size + pixel_size * 2)
+				:addx(size/2)
+				:addy(size/2)
+		end
+	}
+
+	qr[#qr+1] = Def.ActorMultiVertex{
 		InitCommand=function(self)
 			self:SetDrawState{Mode="DrawMode_Quads"}
 				:SetVertices(verts)
-				:zoom( size/#tab_or_message )
+				:zoom(pixel_size)
 		end
 	}
+
+	return qr
+
 end

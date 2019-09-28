@@ -2,7 +2,7 @@
 -- very minor modifications.
 
 local function CreditsText( pn )
-	return LoadFont("_miso") .. {
+	return LoadFont("Common Normal") .. {
 		InitCommand=function(self)
 			self:visible(false)
 			self:name("Credits" .. PlayerNumberToString(pn))
@@ -59,13 +59,13 @@ t[#t+1] = Def.ActorFrame {
 			self:finishtweening():diffusealpha(0.85)
 				:zoomto(_screen.w, (SystemMessageText:GetHeight() + 16) * 0.8 )
 		end,
-		OffCommand=function(self) self:sleep(3):linear(0.5):diffusealpha(0) end,
+		OffCommand=function(self) self:sleep(3.33):linear(0.5):diffusealpha(0) end,
 	},
 
-	LoadFont("_miso")..{
+	LoadFont("Common Normal")..{
 		Name="Text",
 		InitCommand=function(self)
-			self:maxwidth(750):horizalign(left):vertalign(top)
+			self:maxwidth(_screen.w-20):horizalign(left):vertalign(top)
 				:xy(SCREEN_LEFT+10, 10):diffusealpha(0):zoom(0.8)
 			SystemMessageText = self
 		end,
@@ -88,6 +88,9 @@ t[#t+1] = LoadFont("_wendy small")..{
 		local screen = SCREENMAN:GetTopScreen()
 
 		-- if this screen's Metric for ShowCreditDisplay=false, then hide this BitmapText actor
+		-- PS: "ShowCreditDisplay" isn't a real Metric as far as the engine is concerned
+		-- I invented it for Simply Love and it has (understandably) confused other themers.
+		-- Sorry about this.
 		if screen then
 			self:visible( THEME:GetMetric( screen:GetName(), "ShowCreditDisplay" ) )
 		end

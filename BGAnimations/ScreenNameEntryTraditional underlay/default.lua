@@ -94,12 +94,14 @@ local t = Def.ActorFrame {
 	end
 }
 
-local banner_directory = { Hearts="Hearts", Arrows="Arrows" }
+local path = "/"..THEME:GetCurrentThemeDirectory().."Graphics/_FallbackBanners/"..ThemePrefs.Get("VisualTheme")
+local banner_directory = FILEMAN:DoesFileExist(path) and path or THEME:GetPathG("","_FallbackBanners/Arrows")
+
 -- Things that are constantly on the screen (fallback banner + masks)
 t[#t+1] = Def.ActorFrame {
 
 	--fallback banner
-	LoadActor( THEME:GetPathB("ScreenSelectMusic", "overlay/colored_banners/".. (banner_directory[ThemePrefs.Get("VisualTheme")] or "Hearts") .."/banner"..SL.Global.ActiveColorIndex.." (doubleres).png"))..{
+	LoadActor(banner_directory .."/banner"..SL.Global.ActiveColorIndex.." (doubleres).png")..{
 		OnCommand=cmd(xy, _screen.cx, 121.5; zoom, 0.7)
 	},
 
@@ -131,7 +133,7 @@ for i=1,NumStages do
 	local SongNameAndBanner = Def.ActorFrame{
 		InitCommand=function(self) self:visible(false) end,
 		OnCommand=function(self)
-			self:sleep(DurationPerStage * (i-1) );
+			self:sleep(DurationPerStage * (i-1) )
 			self:queuecommand("Display")
 		end,
 		DisplayCommand=function(self)
@@ -147,9 +149,9 @@ for i=1,NumStages do
 	}
 
 	-- song name
-	SongNameAndBanner[#SongNameAndBanner+1] = LoadFont("_miso")..{
+	SongNameAndBanner[#SongNameAndBanner+1] = LoadFont("Common Normal")..{
 		Name="SongName"..i,
-		InitCommand=cmd(xy, _screen.cx, 54; maxwidth, 294),
+		InitCommand=cmd(xy, _screen.cx, 54; maxwidth, 294; shadowlength, 0.333),
 		OnCommand=function(self)
 			if SongOrCourse then
 				self:settext( GAMESTATE:IsCourseMode() and SongOrCourse:GetDisplayFullTitle() or SongOrCourse:GetDisplayMainTitle() )

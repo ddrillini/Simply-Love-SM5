@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ls Competitive/ > tc
-ls ECFA/ > te
+ls ITG/ > tc
+ls FA+/ > te
 diff tc te
 rm -f tc te
