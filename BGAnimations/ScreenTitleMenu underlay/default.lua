@@ -1,4 +1,4 @@
-local TextColor = ThemePrefs.Get("RainbowMode") and Color.Black or Color.White
+local TextColor = (ThemePrefs.Get("RainbowMode") and (not HolidayCheer()) and Color.Black) or Color.White
 
 local SongStats = SONGMAN:GetNumSongs() .. " songs in "
 SongStats = SongStats .. SONGMAN:GetNumSongGroups() .. " groups, "
@@ -60,6 +60,7 @@ local af = Def.ActorFrame{
 
 		self:Center()
 	end,
+
 	OffCommand=cmd(linear,0.5; diffusealpha, 0),
 
 	Def.ActorFrame{
@@ -80,7 +81,6 @@ local af = Def.ActorFrame{
 for i=1,9 do
 	af[#af+1] = Def.ActorFrame {
 		LoadActor("ddrillini/" .. ddrillini_letters[i] .. ".png") .. {
-	-- There appear to be two different syntaxes: `function(self)` and `cmd`.
 			InitCommand=function(self)
 				self
 				-- positioning, sizing, shadow
@@ -109,7 +109,7 @@ for i=1,9 do
 end
 
 -- the best way to spread holiday cheer is singing loud for all to hear
-if PREFSMAN:GetPreference("EasterEggs") and MonthOfYear()==11 then
+if HolidayCheer() then
 	af[#af+1] = Def.Sprite{
 		Texture=THEME:GetPathB("ScreenTitleMenu", "underlay/hat.png"),
 		InitCommand=function(self) self:zoom(0.225):xy( 130, -self:GetHeight()/2 ):rotationz(15):queuecommand("Drop") end,
