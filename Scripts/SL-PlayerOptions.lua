@@ -427,7 +427,7 @@ local Overrides = {
 				{true,true,true,true,true},
 				{true,true,true,true,false},
 				{true,true,true,false,false},
-				{false,false,true,true,true},
+				{true,true,false,false,false},
 			}
 		end,
 		Choices = function()
@@ -435,8 +435,8 @@ local Overrides = {
 			local t = {THEME:GetString("SLPlayerOptions","None")}
 			-- assume pluralization via terminal s
 			t[2] = THEME:GetString(tns,"W5").."s"
-			t[3] = THEME:GetString(tns,"W4").."s + "..t[2]
-			t[4] = THEME:GetString(tns,"W1").."s + "..THEME:GetString(tns,"W2").."s"
+			t[3] = "+ "..THEME:GetString(tns,"W4").."s"
+			t[4] = "+ "..THEME:GetString(tns,"W3").."s"
 			return t
 		end,
 		OneChoiceForAllPlayers = true,
