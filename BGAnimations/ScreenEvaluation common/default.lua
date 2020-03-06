@@ -8,7 +8,9 @@ local t = Def.ActorFrame{
 	-- through multiple panes of information; pass a reference to this ActorFrame
 	-- and the number of panes there are to InputHandler.lua
 	OnCommand=function(self)
-		SCREENMAN:GetTopScreen():AddInputCallback( LoadActor("./InputHandler.lua", {af=self, num_panes=NumPanes}) )
+		if SL.Global.GameMode ~= "Casual" then
+			SCREENMAN:GetTopScreen():AddInputCallback( LoadActor("./InputHandler.lua", {af=self, num_panes=NumPanes}) )
+		end
 	end,
 
 	-- ./Graphics/Triangles.lua, shows up if we're in StomperZ mode
@@ -22,9 +24,6 @@ local t = Def.ActorFrame{
 
 	-- text to display BPM range (and ratemod if ~= 1.0) immediately under the banner
 	LoadActor("./BPM_RateMod.lua"),
-
-	-- code for handling score vocalization
-	LoadActor("./ScoreVocalization.lua"),
 
 	-- store some attributes of this playthrough of this song in the global SL table
 	-- for later retrieval on ScreenEvaluationSummary

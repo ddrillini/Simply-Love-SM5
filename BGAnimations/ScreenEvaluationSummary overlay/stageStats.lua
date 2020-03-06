@@ -1,7 +1,7 @@
 local position_on_screen = ...
 
 local Players = GAMESTATE:GetHumanPlayers()
-local song, StageNum, LetterGradesAF
+local SongOrCourse, StageNum, LetterGradesAF
 
 local path = "/"..THEME:GetCurrentThemeDirectory().."Graphics/_FallbackBanners/"..ThemePrefs.Get("VisualTheme")
 local banner_directory = FILEMAN:DoesFileExist(path) and path or THEME:GetPathG("","_FallbackBanners/Arrows")
@@ -11,19 +11,19 @@ local t = Def.ActorFrame{
 		LetterGradesAF = self:GetParent():GetChild("LetterGradesAF")
 	end,
 	DrawPageCommand=function(self, params)
-		self:sleep(position_on_screen*0.05):linear(0.15):diffusealpha(0)
+		self:finishtweening():sleep(position_on_screen*0.05):linear(0.15):diffusealpha(0)
 
 		StageNum = ((params.Page-1)*4) + position_on_screen
 		local stage = SL.Global.Stages.Stats[StageNum]
-		song = stage ~= nil and stage.song or nil
+		SongOrCourse = stage ~= nil and stage.song or nil
 
 		self:queuecommand("DrawStage")
 	end,
 	DrawStageCommand=function(self)
-		if song == nil then
+		if SongOrCourse == nil then
 			self:visible(false)
 		else
-			self:queuecommand("Show"):visible(true)
+			self:finishtweening():queuecommand("Show"):visible(true)
 		end
 	end,
 
@@ -35,7 +35,7 @@ local t = Def.ActorFrame{
 	--fallback banner
 	LoadActor(banner_directory.."/banner"..SL.Global.ActiveColorIndex.." (doubleres).png")..{
 		InitCommand=function(self) self:y(-6):zoom(0.333) end,
-		DrawStageCommand=function(self) self:visible(song ~= nil and not song:HasBanner()) end
+		DrawStageCommand=function(self) self:visible(SongOrCourse ~= nil and not SongOrCourse:HasBanner()) end
 	},
 
 	-- the banner, if there is one
@@ -43,11 +43,11 @@ local t = Def.ActorFrame{
 		Name="Banner",
 		InitCommand=function(self) self:y(-6) end,
 		DrawStageCommand=function(self)
-			if song then
+			if SongOrCourse then
 				if GAMESTATE:IsCourseMode() then
-					self:LoadFromCourse(song)
+					self:LoadFromCourse(SongOrCourse)
 				else
-					self:LoadFromSong(song)
+					self:LoadFromSong(SongOrCourse)
 				end
 				self:setsize(418,164):zoom(0.333)
 			end
@@ -58,42 +58,28 @@ local t = Def.ActorFrame{
 	LoadFont("Common Normal")..{
 		InitCommand=function(self) self:zoom(0.8):y(-43):maxwidth(350) end,
 		DrawStageCommand=function(self)
-			if song then self:settext(song:GetDisplayFullTitle()) end
+			if SongOrCourse then self:settext(SongOrCourse:GetDisplayFullTitle()) end
 		end
 	},
 
 	-- the BPM(s) of the song
+	-- FIXME: the current layout of ScreenEvaluationSummary doesn't accommodate split BPMs
+	--        so this is currently hardcoded to use the MasterPlayer's BPM values
 	LoadFont("Common Normal")..{
 		InitCommand=function(self) self:zoom(0.6):y(30):maxwidth(350) end,
 		DrawStageCommand=function(self)
-			if song then
-				local text = ""
-				local BPMs
-
-				if GAMESTATE:IsCourseMode() then
-					-- I'm unable to find a way to figure out which songs were played in a randomly
-					-- generated course (for example, the "Most Played" courses that ship with SM5),
-					-- so GetCourseModeBPMs() will return nil in those cases.
-					BPMs = GetCourseModeBPMs(song)
-				else
-					BPMs = song:GetDisplayBpms()
-				end
-
+			if SongOrCourse then
 				local MusicRate = SL.Global.Stages.Stats[StageNum].MusicRate
-
-				if BPMs then
-					if BPMs[1] == BPMs[2] then
-						text = text .. round(BPMs[1] * MusicRate) .. " bpm"
-					else
-						text = text .. round(BPMs[1] * MusicRate) .. " - " .. round(BPMs[2] * MusicRate) .. " bpm"
-					end
-				end
-
+				local mpn = GAMESTATE:GetMasterPlayerNumber()
+				local StepsOrTrail = SL[ToEnumShortString(mpn)].Stages.Stats[StageNum].steps
+				local bpms = StringifyDisplayBPMs(mpn, StepsOrTrail, MusicRate)
 				if MusicRate ~= 1 then
-					text = text .. " (" .. tostring(MusicRate).."x Music Rate)"
+					-- format a string like "150 - 300 bpm (1.5x Music Rate)"
+					self:settext( ("%s bpm (%gx %s)"):format(bpms, MusicRate, THEME:GetString("OptionTitles", "MusicRate")) )
+				else
+					-- format a string like "100 - 200 bpm"
+					self:settext( ("%s bpm"):format(bpms))
 				end
-
-				self:settext(text)
 			end
 		end
 	}
@@ -126,7 +112,7 @@ for player in ivalues(Players) do
 			playerStats = SL[ToEnumShortString(player)].Stages.Stats[StageNum]
 
 			if playerStats then
-		 		difficultyMeter = playerStats.difficultyMeter
+		 		difficultyMeter = playerStats.meter
 		 		difficulty = playerStats.difficulty
 		 		stepartist = playerStats.stepartist
 		 		grade = playerStats.grade
@@ -211,8 +197,7 @@ for player in ivalues(Players) do
 					local val = playerStats.judgments[TNSTypes[i]]
 					if val then self:settext(val) end
 
-					local worst = SL.Global.Stages.Stats[StageNum].WorstTimingWindow
-					self:visible( i <= worst or i==#TNSTypes )
+					self:visible( SL.Global.Stages.Stats[StageNum].TimingWindows[i] or i==#TNSTypes )
 				else
 					self:settext("")
 				end

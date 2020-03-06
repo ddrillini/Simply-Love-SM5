@@ -14,7 +14,7 @@ end
 local t = Def.ActorFrame{
 	InitCommand=function(self)
 		if PREFSMAN:GetPreference("EventMode") and SL.Global.GameMode ~= "Casual" then
-			-- TimeAtSessionStart will be reset to nil between game sesssions
+			-- TimeAtSessionStart will be reset to nil between game sessions
 			-- thus, if it's currently nil, we're loading ScreenSelectMusic
 			-- for the first time this particular game session
 			if SL.Global.TimeAtSessionStart == nil then
@@ -44,10 +44,13 @@ local t = Def.ActorFrame{
 		InitCommand=function(self)
 			bmt_actor = self
 			if PREFSMAN:GetPreference("EventMode") then
-				self:diffusealpha(0):zoom( WideScale(0.305,0.365) ):xy(_screen.cx, WideScale(10,9))
+				self:zoom( WideScale(0.3,0.36) ):y( WideScale(3.15,3.5)/self:GetZoom() )
 			else
-				self:diffusealpha(0):zoom( WideScale(0.5,0.6) ):xy(_screen.cx, 15)
+				self:zoom( WideScale(0.5,0.6) ):y( WideScale(7.5,9)/self:GetZoom() )
 			end
+
+			self:diffusealpha(0):x(_screen.cx)
+
 		end,
 		OnCommand=function(self)
 			if not PREFSMAN:GetPreference("EventMode") then

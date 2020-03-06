@@ -19,13 +19,14 @@ for _,group_name in ipairs(SONGMAN:GetSongGroupNames()) do
 	for _,song in ipairs(SONGMAN:GetSongsInGroup(group_name)) do
 		local song_cost = song:IsMarathon() and 3 or song:IsLong() and 2 or 1
 
-		if song_cost <= stages_remaining then
+		if GAMESTATE:IsEventMode() or song_cost <= stages_remaining then
 			group_durations[group_name] = group_durations[group_name] + song:MusicLengthSeconds()
 		end
 	end
 end
 
 -- ----------------------------------------
+local MusicWheel, SelectedType
 
 local t = Def.ActorFrame{
 
@@ -34,10 +35,10 @@ local t = Def.ActorFrame{
 	end,
 
 	-- ----------------------------------------
-	-- Actorframe for Artist, BPM, and Song length
+	-- ActorFrame for Artist, BPM, and Song length
 	Def.ActorFrame{
-		CurrentSongChangedMessageCommand=function(self) self:playcommand("Set") end,
-		CurrentCourseChangedMessageCommand=function(self) self:playcommand("Set") end,
+		CurrentSongChangedMessageCommand=function(self)    self:playcommand("Set") end,
+		CurrentCourseChangedMessageCommand=function(self)  self:playcommand("Set") end,
 		CurrentStepsP1ChangedMessageCommand=function(self) self:playcommand("Set") end,
 		CurrentTrailP1ChangedMessageCommand=function(self) self:playcommand("Set") end,
 		CurrentStepsP2ChangedMessageCommand=function(self) self:playcommand("Set") end,
@@ -46,12 +47,10 @@ local t = Def.ActorFrame{
 		-- background for Artist, BPM, and Song Length
 		Def.Quad{
 			InitCommand=function(self)
-				self:diffuse(color("#1e282f"))
-					:zoomto( IsUsingWideScreen() and 320 or 310, 48 )
+				self:setsize( IsUsingWideScreen() and 320 or 310, 53 )
+				self:diffuse(color("#1e282f")):y(-3)
 
-				if ThemePrefs.Get("RainbowMode") then
-					self:diffusealpha(0.75)
-				end
+				if ThemePrefs.Get("RainbowMode") then self:diffusealpha(0.9) end
 			end
 		},
 
@@ -61,18 +60,14 @@ local t = Def.ActorFrame{
 
 			-- Artist Label
 			LoadFont("Common Normal")..{
-				InitCommand=function(self)
-					local text = GAMESTATE:IsCourseMode() and "NumSongs" or "Artist"
-					self:settext( THEME:GetString("SongDescription", text) )
-						:horizalign(right):y(-12)
-						:maxwidth(44)
-				end,
+				Text=THEME:GetString("SongDescription", GAMESTATE:IsCourseMode() and "NumSongs" or "Artist"),
+				InitCommand=function(self) self:horizalign(right):y(-12.5):maxwidth(44) end,
 				OnCommand=function(self) self:diffuse(0.5,0.5,0.5,1) end
 			},
 
-			-- Song Artist
+			-- Song Artist (or number of Songs in this Course, if CourseMode)
 			LoadFont("Common Normal")..{
-				InitCommand=function(self) self:horizalign(left):xy(5,-12):maxwidth(WideScale(225,260)) end,
+				InitCommand=function(self) self:horizalign(left):xy(5,-12.5):maxwidth(WideScale(225,260)) end,
 				SetCommand=function(self)
 					if GAMESTATE:IsCourseMode() then
 						local course = GAMESTATE:GetCurrentCourse()
@@ -90,18 +85,65 @@ local t = Def.ActorFrame{
 			LoadFont("Common Normal")..{
 				Text=THEME:GetString("SongDescription", "BPM"),
 				InitCommand=function(self)
-					self:horizalign(right):y(8)
+					self:horizalign(right):y(9)
 						:diffuse(0.5,0.5,0.5,1)
 				end
 			},
 
 			-- BPM value
 			LoadFont("Common Normal")..{
-				InitCommand=function(self) self:horizalign(left):xy(5,8):diffuse(1,1,1,1) end,
+				InitCommand=function(self) self:horizalign(left):xy(5,9):diffuse(1,1,1,1):vertspacing(-7) end,
 				SetCommand=function(self)
-					--defined in ./Scipts/SL-BPMDisplayHelpers.lua
-					local text = GetDisplayBPMs()
-					self:settext(text or "")
+
+					if MusicWheel then SelectedType = MusicWheel:GetSelectedType() end
+
+					-- we only want to try to show BPM values for Songs and Courses
+					-- not Section, Roulette, Random, Portal, Sort, or Custom
+					-- (aside: what is "WheelItemDataType_Custom"?  I need to look into that.)
+					if not (SelectedType=="WheelItemDataType_Song" or SelectedType=="WheelItemDataType_Course") then
+						self:settext("")
+						return
+					end
+
+					-- if only one player is joined, stringify the DisplayBPMs and return early
+					if #GAMESTATE:GetHumanPlayers() == 1 then
+						-- StringifyDisplayBPMs() is defined in ./Scipts/SL-BPMDisplayHelpers.lua
+						self:settext(StringifyDisplayBPMs() or ""):zoom(1)
+						return
+					end
+
+					-- otherwise there is more than one player joined and the possibility of split BPMs
+					local p1bpm = StringifyDisplayBPMs(PLAYER_1)
+					local p2bpm = StringifyDisplayBPMs(PLAYER_2)
+
+					-- it's likely that BPM range is the same for both charts
+					-- no need to show BPM ranges for both players if so
+					if p1bpm == p2bpm then
+						self:settext(p1bpm):zoom(1)
+
+					-- different BPM ranges for the two players
+					else
+						-- show the range for both P1 and P2 split by a newline characters, shrunk slightly to fit the space
+						self:settext( "P1 ".. p1bpm .. "\n" .. "P2 " .. p2bpm ):zoom(0.8)
+						-- the "P1 " and "P2 " segments of the string should be grey
+						self:AddAttribute(0,             {Length=3, Diffuse={0.60,0.60,0.60,1}})
+						self:AddAttribute(3+p1bpm:len(), {Length=3, Diffuse={0.60,0.60,0.60,1}})
+
+						if GAMESTATE:IsCourseMode() then
+							-- P1 and P2's BPM text in CourseMode is white until I have time to figure CourseMode out
+							self:AddAttribute(3,             {Length=p1bpm:len(), Diffuse={1,1,1,1}})
+							self:AddAttribute(7+p1bpm:len(), {Length=p2bpm:len(), Diffuse={1,1,1,1}})
+
+						else
+							-- P1 and P2's BPM text is the color of their difficulty
+							if GAMESTATE:GetCurrentSteps(PLAYER_1) then
+								self:AddAttribute(3,             {Length=p1bpm:len(), Diffuse=DifficultyColor(GAMESTATE:GetCurrentSteps(PLAYER_1):GetDifficulty())})
+							end
+							if GAMESTATE:GetCurrentSteps(PLAYER_2) then
+								self:AddAttribute(7+p1bpm:len(), {Length=p2bpm:len(), Diffuse=DifficultyColor(GAMESTATE:GetCurrentSteps(PLAYER_2):GetDifficulty())})
+							end
+						end
+					end
 				end
 			},
 
@@ -109,9 +151,8 @@ local t = Def.ActorFrame{
 			LoadFont("Common Normal")..{
 				Text=THEME:GetString("SongDescription", "Length"),
 				InitCommand=function(self)
-					self:horizalign(right)
+					self:horizalign(right):diffuse(0.5,0.5,0.5,1)
 						:x(_screen.w/4.5):y(8)
-						:diffuse(0.5,0.5,0.5,1)
 				end
 			},
 
@@ -119,50 +160,48 @@ local t = Def.ActorFrame{
 			LoadFont("Common Normal")..{
 				InitCommand=function(self) self:horizalign(left):xy(_screen.w/4.5 + 5, 8) end,
 				SetCommand=function(self)
-					local duration
+					if MusicWheel == nil then MusicWheel = SCREENMAN:GetTopScreen():GetMusicWheel() end
 
-					if GAMESTATE:IsCourseMode() then
-						local Players = GAMESTATE:GetHumanPlayers()
-						local player = Players[1]
-						local trail = GAMESTATE:GetCurrentTrail(player)
+					SelectedType = MusicWheel:GetSelectedType()
+					local seconds
 
-						if trail then
-							duration = TrailUtil.GetTotalSeconds(trail)
-						end
-					else
+					if SelectedType == "WheelItemDataType_Song" then
+						-- GAMESTATE:GetCurrentSong() can return nil here if we're in pay mode on round 2 (or later)
+						-- and we're returning to SSM to find that the song we'd just played is no longer available
+						-- because it exceeds the 2-round or 3-round time limit cutoff.
 						local song = GAMESTATE:GetCurrentSong()
 						if song then
-							duration = song:MusicLengthSeconds()
-						else
-							local group_name = SCREENMAN:GetTopScreen():GetMusicWheel():GetSelectedSection()
-							if group_name then
-								duration = group_durations[group_name]
-							end
+							seconds = song:MusicLengthSeconds()
+						end
+
+					elseif SelectedType == "WheelItemDataType_Section" then
+						-- MusicWheel:GetSelectedSection() will return a string for the text of the currently active WheelItem
+						-- use it here to look up the overall duration of this group from our precalculated table of group durations
+						seconds = group_durations[MusicWheel:GetSelectedSection()]
+
+					elseif SelectedType == "WheelItemDataType_Course" then
+						-- is it possible for 2 Trails within the same Course to have differing durations?
+						-- I can't think of a scenario where that would happen, but hey, this is StepMania.
+						-- In any case, I'm opting to display the duration of the MPN's current trail.
+						local trail = GAMESTATE:GetCurrentTrail(GAMESTATE:GetMasterPlayerNumber())
+						if trail then
+							seconds = TrailUtil.GetTotalSeconds(trail)
 						end
 					end
 
+					-- r21 lol
+					if seconds == 105.0 then self:settext(THEME:GetString("SongDescription", "r21")); return end
 
-					if duration then
-						duration = duration / SL.Global.ActiveModifiers.MusicRate
-						if duration == 105.0 then
-							-- r21 lol
-							self:settext( THEME:GetString("SongDescription", "r21") )
+					if seconds then
+						seconds = seconds / SL.Global.ActiveModifiers.MusicRate
+
+						-- longer than 1 hour in length
+						if seconds > 3600 then
+							-- format to display as H:MM:SS
+							self:settext(math.floor(seconds/3600) .. ":" .. SecondsToMMSS(seconds%3600))
 						else
-							local hours = 0
-							if duration > 3600 then
-								hours = math.floor(duration / 3600)
-								duration = duration % 3600
-							end
-
-							local finalText
-							if hours > 0 then
-								-- where's HMMSS when you need it?
-								finalText = hours .. ":" .. SecondsToMMSS(duration)
-							else
-								finalText = SecondsToMSS(duration)
-							end
-
-							self:settext( finalText )
+							-- format to display as M:SS
+							self:settext(SecondsToMSS(seconds))
 						end
 					else
 						self:settext("")
@@ -173,7 +212,7 @@ local t = Def.ActorFrame{
 
 		-- long/marathon version bubble graphic and text
 		Def.ActorFrame{
-			OnCommand=function(self)
+			InitCommand=function(self)
 				self:x( IsUsingWideScreen() and 102 or 97 )
 			end,
 			SetCommand=function(self)

@@ -19,41 +19,54 @@ return {
 		{
 			Name="djpohly",
 			Img="djpohly.png",
-			About="djpohly was a constant source of knowledge, help, and measured encouragement during the initial 18 months I spent porting Simply Love to SM5.\n\nHe also authored the PIUIO Linux Kernel driver, which made running SM5 on arcade hardware initially feasible."
+			About="djpohly authored the PIUIO Linux Kernel driver, which made running SM5 on arcade hardware initially feasible.\n\nKnowledgable about every programming question I threw his way, djpohly always crafted his explanations so that I could both understand and still be curious to learn just a little more.\n\nI have fond memories of late nights shared hacking on kernels and cookie dough Pop Tarts alike."
 		},
 		{
-			Name="AJ / freem",
-			Img="freem.png",
-			About="I used freem's SM5 theme, Moonlight, as the foundation/starting point for this port.  While virtually none of Moonlight is left in Simply Love at this point, it helped immensely in providing the examples I needed when getting started.\n\nfreem's sardonic wit, typically left via inline comments throughout Moonlight and SM5's source, helped keep me going."
+			Name="Jason / Lightning",
+			Img="Lightning.png",
+			About="Jason is a prolific UI and GFX designer in the rhythm game community and has led the design of major projects like ITG3, PIU Pro 2, ReRave Arcade, and StepManiaX.\n\nI first met Jason in 2011 when I was learning to theme by making indisputably bad recolors of ITG3. Every time I proudly showed off these early efforts to Jason, he would smile, tell me I was making great progress, and encourage me to keep experimenting."
 		},
 		{
-			Name="kyzentun",
-			Img="kyzentun.png",
-			About="kyzentun answered many of my theming questions on IRC and went out of his way to fix source-related issues that helped me along my way."
+			Name="vyhd",
+			Img="",
+			About='vyhd led development for the OpenITG project and served as an approachable guru when the technical details of StepMania were understood by few.\n\nvyhd was always patient and helpful when responding to my questions, which grew from "Can you help me set up OpenITG on a Pump cab?" to "what\'s fstab?" to "how do pointers even work?"  He was generous with his time and kind with his words, and his didactic style helped me grow as a programmer and a human.',
 		},
-
 	},
 
 	-- page 3
 	{
-		{
-			Name="SM5 Dev Team",
-			Img="stepmania.png",
-			About="Theming in SM5 is easier and more robust than it is in SM3.95.  Thank you shakesoda, Midiman, wolfman2000, roothorick, cybik, et al!  Thanks to the OG team as well, including Chris Danford, Glenn Maynard, and Steve Checkoway.\n\nI am happy to see new and enthusiastic people working on the next iteration of open source dance games, including Lirodon, Jousway, MrThatKid, RyTak, and Squirrel."
-		},
 		{
 			Name="David / mute",
 			Img="mute.png",
 			About="David composed much of the menu music for Simply Love.  In addition to being a prolific simfile author, he is known in the community for figuring out how to properly sync simfiles and authoring the de facto standard guide to simfile syncing.\n\nDavid was an early adopter of SM5 on arcade hardware and has been a vocal proponent of getting people to switch from SM3.95."
 		},
 		{
-			Name="GitHub Community",
-			Img="GitHub.png",
-			About="Many thanks go to the GitHub users who have contributed over the years.  This includes:\n\nKauhsa, HeySora, OmnipotentEntity, ianklatzco, FishamanP, itg-abby, camsta4, fent, djjack, Flameshadowxeroshin, Horsey-, bowwychan, tfrederick74656, DinsFire64, sahunt, StefanoFiumara, concubidated, sangyeolbaek, nayotodot, dougshell, shockdude, Sereni, karamel59, electromuis, Fieoner, ListenerJubatus, TheNick, CrashCringle12, and natano."
-		}
+			Name="AJ / freem",
+			Img={"freem.png", "mr.choices.jpg"},
+			About="I used freem's SM5 theme, Moonlight, as the foundation/starting point when first working on this theme.  While virtually none of Moonlight is left in Simply Love at this point, it helped immensely in providing the examples I needed when getting started.\n\nfreem's sardonic wit, typically left via inline comments throughout Moonlight and SM5's source, helped keep me going."
+		},
 	},
 
 	-- page 4
+	{
+		{
+			Name="kyzentun",
+			Img="kyzentun.png",
+			About="kyzentun answered many of my theming questions on IRC and went out of his way to fix source-related issues that helped me along my way."
+		},
+		{
+			Name="GitHub Community",
+			Img="GitHub.png",
+			About="Many thanks go to the GitHub users who have contributed to SL over the years.  This includes:\n\nKauhsa, HeySora, OmnipotentEntity, ianklatzco, FishamanP, itg-abby, camsta4, fent, djjack, Flameshadowxeroshin, Horsey-, bowwychan, tfrederick74656, DinsFire64, sahunt, StefanoFiumara, concubidated, sangyeolbaek, nayotodot, dougshell, shockdude, Sereni, karamel59, electromuis, Fieoner, ListenerJubatus, TheNick, CrashCringle12, jordando, and natano."
+		},
+		{
+			Name="SM5 Dev Team",
+			Img="stepmania.png",
+			About="Theming in SM5 is easier and more robust than it is in SM3.95.  Thank you shakesoda, Midiman, wolfman2000, roothorick, cybik, et al!  Thanks to the OG team as well, including Chris Danford, Glenn Maynard, and Steve Checkoway.\n\nI am happy to see new and enthusiastic people working on the next iteration of open source dance games, including Lirodon, Jousway, MrThatKid, RyTak, and Squirrel."
+		},
+	},
+
+	-- page 5
 	{
 		{
 			Name="Caitlin / Evocait",
@@ -73,11 +86,11 @@ return {
 		}
 	},
 
-	-- page 5
+	-- page 6
 	{
 		{
 			Name="Dance Dance Maniacs",
-			Img={ "ddm/2019.jpg", "ddm/2017.jpg", "ddm/2015.jpg", "ddm/2018.jpg", "ddm/2012.jpg", "ddm/2010.jpg" },
+			Img={ "ddm/2020.jpg", "ddm/2019.jpg", "ddm/2017.jpg", "ddm/2015.jpg", "ddm/2018.jpg", "ddm/2012.jpg", "ddm/2010.jpg" },
 			About="The PSU Dance Dance Maniacs dance gamed with me at my best and worst.\n\nLightningXCE, Zyroplex, Captain Swagonforce, rawinput, milk, teejusb, NBCrescendo, Vidur, freemansbackup, chronohat\n\nDJ OMiY, minomotu, Kristina, blakjakal, Vale, Silverheart97, AndyBeard, Alex, tfrederick, Catherine, Elena, Jonathan, Eileen, Ali, Anna\n\nRime, PirateKing, Fox, Lev, Cathy, Grant, Koopa, CCTV, MathMatt, TheNick, Nate(s), Crash Cringle, Daisy1218, Miaou Miaou Miaou, Silverwolfstar, and more."
 		},
 		{
@@ -85,25 +98,6 @@ return {
 			Img={ "uiuc/uiuc.jpg", "uiuc/uiuc2.jpg", "uiuc/uiuc3.jpg", "uiuc/uiuc4.jpg", "uiuc/uiuc5.jpg", "uiuc/wendy.jpg" },
 			About="Thanks to the DDRIllini crew for being DDM's loving counterpart a time zone away.  I have fond memories of driving with DDM friends to DDRIllini's annual Rumble in the Prairie events each spring.\n\nThank you, Kyt-Xune, Z0rk, feedbacker, Sudzi, ian5v, Benpai, pez, mtgmackid, Krysel, Kasemei, Juni, rikame, Mary, andrewipark, et al!"
 		}
-	},
-
-	-- page 6
-	{
-		{
-			Name="Ian / Archi",
-			Img="archi.png",
-			About="I'm pretty sure the Pendulum packs singlehandedly instigated the notion that \"ITG is all streams\" and we have Ian to thank/blame for that.\n\nWhen he's not busy streaming, he encourages others to through GrooveStats, the ECS events, and an overly-enthusiastic-soccer-mom coaching style."
-		},
-		{
-			Name="Dyle / RiOdO",
-			Img="riodo.jpg",
-			About="By regularly organizing and hosting a variety of tech-oriented events such as East Coast FA, Everyone Can FA, and Technical Showcase, Dyle has contributed significantly to shape the post-ITG dance game scene."
-		},
-		{
-			Name="Brittney / Galaga",
-			Img="galaga.jpg",
-			About="Brittney has been a leading voice in the effort to create a community and organize events for girls and women who play dance games.\n\nShe has encouraged women of all skill levels from around the world to push themselves and each other to improve through innovative and compelling competition, and the overall community is better for it."
-		},
 	},
 
 	-- page 7
@@ -120,13 +114,32 @@ return {
 			About="Alan's programming work with the UKSRT and Mawaru series blows away every preconceived notion you've ever had of what dance games can be. The results are amusing, startling, incredible, and always fun.\n\nHe's a good friend, and has helped me be a kinder human being."
 		},
 		{
-			Name="vyhd",
-			Img="",
-			About='vyhd led development for the OpenITG project and served as an approachable guru when the technical details of StepMania were understood by few.\n\nvyhd was always patient and helpful when responding to my questions, which grew from "Can you help me set up OpenITG on a Pump cab?" to "what\'s fstab?" to "how do pointers even work?"  He was generous with his time and kind with his words, and his didactic style helped me grow as a programmer and a human.',
+			Name="bblum",
+			Img="bblum.jpg",
+			About="bblum offered me a place to stay when my life was in chaos and my mental space was a hellscape.  Moreover, they afforded a sense of local friendship when the city felt impossibly large and isolating.\n\nWe connected over grad school experiences and they demonstrated that formal academic journal articles can be enjoyable if you find the right topic (see: SIGBOVIK 2016 proceedings).",
 		},
 	},
 
 	-- page 8
+	{
+		{
+			Name="Ian / Archi",
+			Img="archi.png",
+			About="I'm pretty sure the Pendulum packs singlehandedly instigated the notion that \"ITG is all streams\" and we have Ian to thank/blame for that.\n\nWhen he's not busy streaming, he encourages others to through GrooveStats, the ECS events, and an overly-enthusiastic-soccer-mom coaching style."
+		},
+		{
+			Name="Brittney / Galaga",
+			Img="galaga.jpg",
+			About="Brittney has been a leading voice in the effort to create a community and organize events for girls and women who play dance games.\n\nShe has encouraged women of all skill levels from around the world to push themselves and each other to improve through innovative and compelling competition, and the overall community is better for it."
+		},
+		{
+			Name="Dyle / RiOdO",
+			Img="riodo.jpg",
+			About="By regularly organizing and hosting a variety of tech-oriented events such as East Coast FA, Everyone Can FA, and Technical Showcase, Dyle has contributed significantly to shape the post-ITG dance game scene."
+		},
+	},
+
+	-- page 9
 	{
 		{
 			Name="Jose_Varela",
@@ -145,7 +158,7 @@ return {
 		},
 	},
 
-	-- page 9
+	-- page 10
 	{
 		{
 			Name="FMS_Cat",
@@ -159,22 +172,27 @@ return {
 		},
 	},
 
-	-- page 10
+	-- page 11
 	{
 		{
 			Name="Riakodoadm",
 			Img="Riakodoadm.jpg",
 			About="Riakodoadm wrote music for Simply Love and provided social support when I needed it. We spent many late nights commiserating with one another over Lua, programming, and music games.\n\nShe's working on an awesome new SM5 theme that you should check out when it is ready."
 		},
-		{
-			Name="bblum",
-			Img="bblum.jpg",
-			About="bblum offered me a place to stay when my life was in chaos and my mental space was a hellscape.  Moreover, they afforded a sense of local friendship when the city felt impossibly large and isolating.\n\nWe connected over grad school experiences and they demonstrated that formal academic journal articles can be enjoyable if you find the right topic (see: SIGBOVIK 2016 proceedings).",
-		},
+
 		{
 			Name="pluto",
 			Img="pluto.png",
 			About="Pluto has supplied exceptional art for many dance game events such as ECS and Nordic Cup, and has infused each with her signature style.\n\nWhen she collaborated with me on my Distant Towers visual novel project, her artistic output brought life and vitality to my moribund mind, and her feedback as a friend kept my soul on life support and my heart beating while I was otherwise dead.",
 		},
 	},
+
+	-- page 12
+	{
+		{
+			Name="quietly-turning",
+			Img={ "quietly/Summer.jpg", "quietly/infinitely-blue.mp4", "quietly/not-yet-withered.png", "quietly/Winter.mp4", "quietly/little-walks.mp4"},
+			About={ "I am so ugly\nbut remember feeling small\nalive like Summer", "infinitely blue\nunknown to bright city lights\nabsent in sidewalks", "not yet withered we\nquietly turn towards the sun\nto live a day more", "I can close my eyes\nand see yours, radiant, calm\nthrough blinding Winter", "little walks we share\nwhimsy, warmth, regret, time, love\nlet's keep going, yeah?"}
+		}
+	}
 }

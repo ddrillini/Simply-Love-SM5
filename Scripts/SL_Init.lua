@@ -4,7 +4,7 @@ local PlayerDefaults = {
 	__index = {
 		initialize = function(self)
 			self.ActiveModifiers = {
-				SpeedModType = "x",
+				SpeedModType = "X",
 				SpeedMod = 1.00,
 				JudgmentGraphic = "Love 2x6.png",
 				ComboFont = "Wendy",
@@ -25,7 +25,7 @@ local PlayerDefaults = {
 				MeasureCounter = "None",
 				MeasureCounterLeft = true,
 				MeasureCounterUp = false,
-				DataVisualizations = "Disabled",
+				DataVisualizations = "None",
 				TargetScore = 11,
 				ActionOnMissedTarget = "Nothing",
 				Pacemaker = false,
@@ -66,7 +66,7 @@ local GlobalDefaults = {
 		initialize = function(self)
 			self.ActiveModifiers = {
 				MusicRate = 1.0,
-				WorstTimingWindow = 5,
+				TimingWindows = {true, true, true, true, true},
 			}
 			self.Stages = {
 				PlayedThisGame = 0,
@@ -107,6 +107,7 @@ SL = {
 	P1 = setmetatable( {}, PlayerDefaults),
 	P2 = setmetatable( {}, PlayerDefaults),
 	Global = setmetatable( {}, GlobalDefaults),
+
 	-- Colors that Simply Love's background can be
 	Colors = {
 		"#FF3C23",
@@ -163,11 +164,11 @@ SL = {
 			RegenComboAfterMiss=0,
 			MaxRegenComboAfterMiss=0,
 			MinTNSToHideNotes="TapNoteScore_W3",
-			HarshHotLifePenalty=1,
+			HarshHotLifePenalty=true,
 
-			PercentageScoring=1,
+			PercentageScoring=true,
 			AllowW1="AllowW1_Everywhere",
-			SubSortByNumSteps=1,
+			SubSortByNumSteps=true,
 
 			TimingWindowSecondsW1=0.021500,
 			TimingWindowSecondsW2=0.043000,
@@ -183,11 +184,11 @@ SL = {
 			RegenComboAfterMiss=5,
 			MaxRegenComboAfterMiss=10,
 			MinTNSToHideNotes="TapNoteScore_W3",
-			HarshHotLifePenalty=1,
+			HarshHotLifePenalty=true,
 
-			PercentageScoring=1,
+			PercentageScoring=true,
 			AllowW1="AllowW1_Everywhere",
-			SubSortByNumSteps=1,
+			SubSortByNumSteps=true,
 
 			TimingWindowSecondsW1=0.021500,
 			TimingWindowSecondsW2=0.043000,
@@ -203,11 +204,11 @@ SL = {
 			RegenComboAfterMiss=5,
 			MaxRegenComboAfterMiss=10,
 			MinTNSToHideNotes="TapNoteScore_W4",
-			HarshHotLifePenalty=1,
+			HarshHotLifePenalty=true,
 
-			PercentageScoring=1,
+			PercentageScoring=true,
 			AllowW1="AllowW1_Everywhere",
-			SubSortByNumSteps=1,
+			SubSortByNumSteps=true,
 
 			TimingWindowSecondsW1=0.011000,
 			TimingWindowSecondsW2=0.021500,
@@ -223,11 +224,11 @@ SL = {
 			RegenComboAfterMiss=0,
 			MaxRegenComboAfterMiss=0,
 			MinTNSToHideNotes="TapNoteScore_W4",
-			HarshHotLifePenalty=0,
+			HarshHotLifePenalty=false,
 
-			PercentageScoring=1,
+			PercentageScoring=true,
 			AllowW1="AllowW1_Everywhere",
-			SubSortByNumSteps=1,
+			SubSortByNumSteps=true,
 
 			TimingWindowSecondsW1=0.005,
 			TimingWindowSecondsW2=0.010,
@@ -370,8 +371,8 @@ SL = {
 }
 
 
--- Initialize preferences by calling this method.
--- We typically do this from ./BGAnimations/ScreenTitleMenu underlay/default.lua
+-- Initialize preferences by calling this method.  We typically do
+-- this from ./BGAnimations/ScreenTitleMenu underlay/default.lua
 -- so that preferences reset between each game cycle.
 
 function InitializeSimplyLove()
@@ -381,5 +382,4 @@ function InitializeSimplyLove()
 	GAMESTATE:SetPreferredSong( SONGMAN:FindSong("SOWNDS/Applause") )
 end
 
--- TODO: remove this; it's for debugging purposes (Control+F2 to reload scripts) only
 InitializeSimplyLove()

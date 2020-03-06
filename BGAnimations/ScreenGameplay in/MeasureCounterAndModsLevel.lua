@@ -2,7 +2,7 @@ return function(SongNumberInCourse)
 	for player in ivalues(GAMESTATE:GetHumanPlayers()) do
 
 		-- get the PlayerOptions string for any human players and store it now
-		-- we'll retreive it the next time ScreenSelectMusic loads and re-apply those same mods
+		-- we'll retrieve it the next time ScreenSelectMusic loads and re-apply those same mods
 		-- in this way, we can override the effects of songs that forced modifiers during gameplay
 		-- the old-school (ie. ITG) way of GAMESTATE:ApplyGameCommand()
 		local pn = ToEnumShortString(player)
@@ -29,7 +29,7 @@ return function(SongNumberInCourse)
 			local threshold_to_be_stream = 2
 
 			-- if any of these don't match what we're currently looking for...
-			if SL[pn].Streams.SongDir ~= song_dir or SL[pn].Streams.StepsType ~= step_type or SL[pn].Streams.Difficulty ~= difficulty then
+			if SL[pn].Streams.SongDir ~= song_dir or SL[pn].Streams.StepsType ~= steps_type or SL[pn].Streams.Difficulty ~= difficulty then
 
 				-- ...then parse the simfile, given the current parameters
 				SL[pn].Streams.Measures = GetStreams(song_dir, steps_type, difficulty, notes_per_measure, threshold_to_be_stream)

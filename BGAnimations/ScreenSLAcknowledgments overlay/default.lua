@@ -56,7 +56,7 @@ for i=1,#pages do
 		HideCommand=function(self) self:visible(false) end,
 		["ShowPage"..i.."Command"]=function(self) self:visible(true) end
 
-	}..LoadActor("Page.lua", pages[i])
+	}..LoadActor("Page.lua", {i, pages[i]})
 
 end
 
